@@ -137,13 +137,34 @@ export default function Rates() {
           ))}
         </motion.div>
 
+        {/* View all rates button */}
+        <motion.div
+          initial={prefersReduced ? {} : { opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.3 }}
+          className="flex justify-center mt-10"
+        >
+          <a
+            href={siteConfig.downloadUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-secondary text-sm sm:text-base px-8 py-3"
+          >
+            View All Rates
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            </svg>
+          </a>
+        </motion.div>
+
         {/* Disclaimer */}
         <motion.p
           initial={prefersReduced ? {} : { opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          className="text-center text-xs text-gray-400 mt-8"
+          className="text-center text-xs text-gray-400 mt-6"
         >
           Rates may vary by country and are subject to change. Check the app for the latest rates.
         </motion.p>
