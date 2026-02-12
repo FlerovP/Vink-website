@@ -23,7 +23,7 @@ export default function DownloadCTA() {
           <div
             className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-20 pointer-events-none"
             style={{
-              background: "radial-gradient(circle, rgba(10,186,181,0.4), transparent 70%)",
+              background: "radial-gradient(circle, rgba(91,154,255,0.4), transparent 70%)",
               filter: "blur(60px)",
               transform: "translate(30%, -30%)",
             }}
@@ -31,7 +31,7 @@ export default function DownloadCTA() {
           <div
             className="absolute bottom-0 left-0 w-60 h-60 rounded-full opacity-15 pointer-events-none"
             style={{
-              background: "radial-gradient(circle, rgba(12,132,137,0.5), transparent 70%)",
+              background: "radial-gradient(circle, rgba(40,117,255,0.5), transparent 70%)",
               filter: "blur(50px)",
               transform: "translate(-20%, 30%)",
             }}

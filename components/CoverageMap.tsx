@@ -134,7 +134,7 @@ export default function CoverageMap() {
             className="absolute inset-0 opacity-30 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(10,186,181,0.15), transparent 70%)",
+                "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(40,117,255,0.15), transparent 70%)",
             }}
           />
 
@@ -149,7 +149,7 @@ export default function CoverageMap() {
                 cx={x}
                 cy={y}
                 r="0.45"
-                fill="#0ABAB5"
+                fill="#2875FF"
                 initial={
                   prefersReduced
                     ? { opacity: 0.5 }
@@ -178,7 +178,7 @@ export default function CoverageMap() {
                   cx={x}
                   cy={y}
                   r="0.8"
-                  fill="#0ABAB5"
+                  fill="#2875FF"
                   initial={{ opacity: 0, scale: 0.5 }}
                   animate={
                     prefersReduced

@@ -72,7 +72,7 @@ export default function AnimatedGlobe() {
         className="absolute w-[80%] h-[80%] rounded-full opacity-30"
         style={{
           background:
-            "radial-gradient(circle, rgba(10,186,181,0.25) 0%, rgba(12,132,137,0.1) 40%, transparent 70%)",
+            "radial-gradient(circle, rgba(91,154,255,0.25) 0%, rgba(40,117,255,0.1) 40%, transparent 70%)",
           filter: "blur(40px)",
         }}
       />
@@ -99,7 +99,7 @@ export default function AnimatedGlobe() {
               y1={y}
               x2="420"
               y2={y}
-              stroke="rgba(12,132,137,0.07)"
+              stroke="rgba(40,117,255,0.07)"
               strokeWidth="0.5"
             />
           ))}
@@ -110,7 +110,7 @@ export default function AnimatedGlobe() {
               y1="40"
               x2={x}
               y2="270"
-              stroke="rgba(12,132,137,0.07)"
+              stroke="rgba(40,117,255,0.07)"
               strokeWidth="0.5"
             />
           ))}
@@ -154,7 +154,7 @@ export default function AnimatedGlobe() {
                 cy={point.y}
                 r="6"
                 fill="none"
-                stroke="rgba(10,186,181,0.3)"
+                stroke="rgba(91,154,255,0.3)"
                 strokeWidth="1"
                 initial={prefersReduced ? { scale: 1, opacity: 0.3 } : { scale: 0.5, opacity: 0 }}
                 animate={
@@ -177,7 +177,7 @@ export default function AnimatedGlobe() {
                 cx={point.x}
                 cy={point.y}
                 r="2.5"
-                fill="#0ABAB5"
+                fill="#2875FF"
                 initial={prefersReduced ? { opacity: 0.8 } : { scale: 0, opacity: 0 }}
                 animate={prefersReduced ? {} : { scale: 1, opacity: 0.9 }}
                 transition={{
@@ -192,9 +192,9 @@ export default function AnimatedGlobe() {
           {/* Gradient defs */}
           <defs>
             <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#0C8489" stopOpacity="0.6" />
-              <stop offset="50%" stopColor="#0ABAB5" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#0C8489" stopOpacity="0.6" />
+              <stop offset="0%" stopColor="#2875FF" stopOpacity="0.6" />
+              <stop offset="50%" stopColor="#5B9AFF" stopOpacity="0.8" />
+              <stop offset="100%" stopColor="#2875FF" stopOpacity="0.6" />
             </linearGradient>
           </defs>
         </svg>
