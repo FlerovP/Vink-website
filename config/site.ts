@@ -84,17 +84,6 @@ export const siteConfig = {
     },
   ],
 
-  rates: [
-    { country: "Turkey", flag: "🇹🇷", pricePerGB_USD: 2.1 },
-    { country: "Kazakhstan", flag: "🇰🇿", pricePerGB_USD: 2.5 },
-    { country: "Thailand", flag: "🇹🇭", pricePerGB_USD: 3.2 },
-    { country: "UAE", flag: "🇦🇪", pricePerGB_USD: 3.8 },
-    { country: "France", flag: "🇫🇷", pricePerGB_USD: 4.2 },
-    { country: "Germany", flag: "🇩🇪", pricePerGB_USD: 4.5 },
-    { country: "United Kingdom", flag: "🇬🇧", pricePerGB_USD: 4.8 },
-    { country: "United States", flag: "🇺🇸", pricePerGB_USD: 5.5 },
-  ],
-
   faq: [
     {
       question: "Do I need to buy a data package?",

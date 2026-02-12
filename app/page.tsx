@@ -9,8 +9,14 @@ import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
 import GlowOrbs from "@/components/GlowOrbs";
 import NoiseOverlay from "@/components/NoiseOverlay";
+import { fetchRates, getTopRates } from "@/lib/rates";
 
-export default function Home() {
+export const revalidate = 60; // ISR: rebuild every 60 seconds
+
+export default async function Home() {
+  const allRates = await fetchRates();
+  const topRates = getTopRates(allRates, 8);
+
   return (
     <>
       {/* Background layers */}
@@ -27,7 +33,7 @@ export default function Home() {
         <USPGrid />
         <HowItWorks />
         <CoverageMap />
-        <Rates />
+        <Rates rates={topRates} />
         <DownloadCTA />
         <FAQ />
       </main>

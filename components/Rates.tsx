@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { siteConfig } from "@/config/site";
+import Link from "next/link";
+import type { CountryRate } from "@/lib/rates";
 
 const containerVariants = {
   hidden: {},
@@ -31,14 +31,12 @@ const cardVariantsReduced = {
   visible: { opacity: 1 },
 };
 
-export default function Rates() {
-  const prefersReduced = useReducedMotion();
+interface RatesProps {
+  rates: CountryRate[];
+}
 
-  // Sort rates by price ascending
-  const sortedRates = useMemo(
-    () => [...siteConfig.rates].sort((a, b) => a.pricePerGB_USD - b.pricePerGB_USD),
-    []
-  );
+export default function Rates({ rates }: RatesProps) {
+  const prefersReduced = useReducedMotion();
 
   return (
     <section id="rates" className="section-padding relative z-10">
@@ -99,7 +97,7 @@ export default function Rates() {
           viewport={{ once: true, margin: "-60px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"
         >
-          {sortedRates.map((rate, i) => (
+          {rates.map((rate, i) => (
             <motion.div
               key={rate.country}
               variants={prefersReduced ? cardVariantsReduced : cardVariants}
@@ -118,7 +116,7 @@ export default function Rates() {
                   </h3>
                   <p className="text-xl font-bold text-gray-900 mt-0.5">
                     <span className="text-sm font-normal text-gray-400 mr-0.5">$</span>
-                    {rate.pricePerGB_USD.toFixed(2)}
+                    {rate.pricePerGB.toFixed(2)}
                     <span className="text-xs font-normal text-gray-400 ml-1">/GB</span>
                   </p>
                 </div>
@@ -145,17 +143,15 @@ export default function Rates() {
           transition={{ duration: 0.5, delay: 0.3 }}
           className="flex justify-center mt-10"
         >
-          <a
-            href={siteConfig.downloadUrl}
-            target="_blank"
-            rel="noopener noreferrer"
+          <Link
+            href="/rates"
             className="btn-secondary text-sm sm:text-base px-8 py-3"
           >
             View All Rates
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
-          </a>
+          </Link>
         </motion.div>
 
         {/* Disclaimer */}
@@ -166,7 +162,7 @@ export default function Rates() {
           transition={{ duration: 0.5, delay: 0.4 }}
           className="text-center text-xs text-gray-400 mt-6"
         >
-          Rates may vary by country and are subject to change. Check the app for the latest rates.
+          Actual rate depends on the network operator your SIM connects to. Rates are updated in real time and may vary.
         </motion.p>
       </div>
     </section>
