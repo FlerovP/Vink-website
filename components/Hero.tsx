@@ -55,13 +55,13 @@ export default function Hero() {
               initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-4 items-center sm:items-stretch justify-center lg:justify-start"
+              className="flex flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
             >
               <a
                 href={siteConfig.downloadUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="btn-primary text-base px-8 py-3.5"
+                className="btn-primary text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-3.5"
               >
                 <svg
                   className="w-5 h-5"
@@ -86,7 +86,7 @@ export default function Hero() {
                     .querySelector("#rates")
                     ?.scrollIntoView({ behavior: "smooth" });
                 }}
-                className="btn-secondary text-base px-8 py-3.5"
+                className="btn-secondary text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-3.5"
               >
                 {siteConfig.hero.secondaryCta}
               </a>
