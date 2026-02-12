@@ -97,24 +97,53 @@ const LAND: [number, number][] = [
 
 /* ─── City markers ─── */
 const CITIES = [
-  { lon: -74, lat: 40.7, label: "New York" },
-  { lon: -43, lat: -23, label: "São Paulo" },
-  { lon: -0.1, lat: 51.5, label: "London" },
-  { lon: 2.4, lat: 48.9, label: "Paris" },
-  { lon: 13, lat: 52.5, label: "Berlin" },
-  { lon: 29, lat: 41, label: "Istanbul" },
-  { lon: 37.6, lat: 55.8, label: "Moscow" },
-  { lon: 55.3, lat: 25.2, label: "Dubai" },
-  { lon: 73, lat: 19, label: "Mumbai" },
-  { lon: 100.5, lat: 13.8, label: "Bangkok" },
-  { lon: 121.5, lat: 31.2, label: "Shanghai" },
-  { lon: 139.7, lat: 35.7, label: "Tokyo" },
-  { lon: 151, lat: -33.9, label: "Sydney" },
-  { lon: 76.9, lat: 43.2, label: "Almaty" },
+  { lon: -74, lat: 40.7, label: "New York" },       // 0
+  { lon: -43, lat: -23, label: "São Paulo" },        // 1
+  { lon: -0.1, lat: 51.5, label: "London" },         // 2
+  { lon: 2.4, lat: 48.9, label: "Paris" },           // 3
+  { lon: 13, lat: 52.5, label: "Berlin" },           // 4
+  { lon: 29, lat: 41, label: "Istanbul" },           // 5
+  { lon: 37.6, lat: 55.8, label: "Moscow" },         // 6
+  { lon: 55.3, lat: 25.2, label: "Dubai" },          // 7
+  { lon: 73, lat: 19, label: "Mumbai" },             // 8
+  { lon: 100.5, lat: 13.8, label: "Bangkok" },       // 9
+  { lon: 121.5, lat: 31.2, label: "Shanghai" },      // 10
+  { lon: 139.7, lat: 35.7, label: "Tokyo" },         // 11
+  { lon: 151, lat: -33.9, label: "Sydney" },         // 12
+  { lon: 76.9, lat: 43.2, label: "Almaty" },         // 13
+  { lon: -118, lat: 34, label: "Los Angeles" },      // 14
+  { lon: -80, lat: 25.8, label: "Miami" },           // 15
+  { lon: -99, lat: 19.4, label: "Mexico City" },     // 16
+  { lon: -3.7, lat: 40.4, label: "Madrid" },         // 17
+  { lon: 12.5, lat: 41.9, label: "Rome" },           // 18
+  { lon: 24, lat: 60.2, label: "Helsinki" },         // 19
+  { lon: 32.9, lat: 39.9, label: "Ankara" },         // 20
+  { lon: 46.7, lat: 24.7, label: "Riyadh" },        // 21
+  { lon: 36.8, lat: -1.3, label: "Nairobi" },       // 22
+  { lon: 3.4, lat: 6.5, label: "Lagos" },           // 23
+  { lon: 28, lat: -26, label: "Johannesburg" },      // 24
+  { lon: 90.4, lat: 23.8, label: "Dhaka" },         // 25
+  { lon: 103.8, lat: 1.35, label: "Singapore" },     // 26
+  { lon: 106.8, lat: -6.2, label: "Jakarta" },       // 27
+  { lon: 114.2, lat: 22.3, label: "Hong Kong" },     // 28
+  { lon: 127, lat: 37.6, label: "Seoul" },           // 29
 ];
 
 const ARCS = [
-  [0,2],[2,3],[3,4],[4,6],[5,7],[7,8],[8,9],[9,10],[10,11],[11,12],[0,1],[6,13],[13,7],
+  // Transatlantic
+  [0,2],[0,15],[14,0],[14,11],[15,1],[0,1],[16,15],
+  // Europe internal
+  [2,3],[3,4],[3,17],[17,18],[4,19],[18,5],[4,6],[2,6],[19,6],
+  // Europe → Middle East / Africa
+  [5,7],[5,20],[20,7],[7,21],[21,22],[23,22],[23,24],[22,24],[2,23],
+  // Middle East → Asia
+  [7,8],[7,13],[13,6],[8,25],[25,9],[8,9],
+  // Asia internal
+  [9,26],[26,27],[9,28],[28,10],[10,11],[11,29],[29,10],[28,11],
+  // Asia → Oceania
+  [26,12],[27,12],[11,12],
+  // Long-haul
+  [0,11],[2,8],[14,10],[1,23],[6,10],
 ];
 
 /* ─── Map projection: Mercator-like into SVG coords ─── */
@@ -266,7 +295,7 @@ export default function AnimatedGlobe() {
 
           {/* ── Data packets traveling along arcs ── */}
           {!prefersReduced &&
-            [0, 3, 5, 8, 10].map((ci, i) => {
+            [0, 7, 12, 18, 24, 30, 35, 38].map((ci, i) => {
               const [fi, ti] = ARCS[ci];
               const a = cityDots[fi];
               const b = cityDots[ti];
