@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 import { siteConfig } from "@/config/site";
+import SupportChat from "@/components/SupportChat";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -71,6 +72,7 @@ export default async function LocaleLayout({ children, params }: Props) {
       <body>
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
+          <SupportChat />
         </NextIntlClientProvider>
       </body>
     </html>

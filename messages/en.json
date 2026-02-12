@@ -168,5 +168,14 @@
     "termsOfService": "Terms of Service",
     "support": "Support",
     "copyright": "© {year} VINK SIM. All rights reserved."
+  },
+  "chat": {
+    "title": "VINK Support",
+    "subtitle": "AI Assistant",
+    "placeholder": "Ask about VINK SIM...",
+    "greeting": "Hi! I'm the VINK SIM assistant. I can help you with rates, setup, coverage, and anything else about our eSIM service. What would you like to know?",
+    "send": "Send",
+    "close": "Close chat",
+    "error": "Sorry, something went wrong. Please try again."
   }
 }
