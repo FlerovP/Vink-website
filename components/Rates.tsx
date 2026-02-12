@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import type { CountryRate } from "@/lib/rates";
+import CountryPopup from "@/components/CountryPopup";
 
 const containerVariants = {
   hidden: {},
@@ -37,6 +39,7 @@ interface RatesProps {
 
 export default function Rates({ rates }: RatesProps) {
   const prefersReduced = useReducedMotion();
+  const [selectedRate, setSelectedRate] = useState<CountryRate | null>(null);
 
   return (
     <section id="rates" className="section-padding relative z-10">
@@ -101,7 +104,8 @@ export default function Rates({ rates }: RatesProps) {
             <motion.div
               key={rate.country}
               variants={prefersReduced ? cardVariantsReduced : cardVariants}
-              className="group relative rounded-2xl p-5 glass glow-cyan-hover transition-all duration-300 hover:-translate-y-1 cursor-default"
+              onClick={() => setSelectedRate(rate)}
+              className="group relative rounded-2xl p-5 glass glow-cyan-hover transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 {/* Flag */}
@@ -165,6 +169,9 @@ export default function Rates({ rates }: RatesProps) {
           Actual rate depends on the network operator your SIM connects to. Rates are updated in real time and may vary.
         </motion.p>
       </div>
+
+      {/* Country popup */}
+      <CountryPopup rate={selectedRate} onClose={() => setSelectedRate(null)} />
     </section>
   );
 }

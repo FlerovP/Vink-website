@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import type { CountryRate } from "@/lib/rates";
+import CountryPopup from "@/components/CountryPopup";
 
 const containerVariants = {
   hidden: {},
@@ -37,6 +38,7 @@ interface RatesSearchProps {
 
 export default function RatesSearch({ rates }: RatesSearchProps) {
   const [query, setQuery] = useState("");
+  const [selectedRate, setSelectedRate] = useState<CountryRate | null>(null);
   const prefersReduced = useReducedMotion();
 
   const filtered = useMemo(() => {
@@ -102,7 +104,8 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
             <motion.div
               key={rate.country}
               variants={prefersReduced ? cardVariantsReduced : cardVariants}
-              className="group relative rounded-2xl p-4 sm:p-5 glass glow-cyan-hover transition-all duration-300 hover:-translate-y-1 cursor-default"
+              onClick={() => setSelectedRate(rate)}
+              className="group relative rounded-2xl p-4 sm:p-5 glass glow-cyan-hover transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               <div className="flex flex-col items-center text-center gap-2 sm:flex-row sm:text-left sm:gap-3">
                 {/* Flag */}
@@ -153,6 +156,9 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
           </button>
         </div>
       )}
+
+      {/* Country popup */}
+      <CountryPopup rate={selectedRate} onClose={() => setSelectedRate(null)} />
     </>
   );
 }
