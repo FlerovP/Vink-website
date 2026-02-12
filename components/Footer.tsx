@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
+import { Link } from "@/i18n/navigation";
 
 const FOOTER_LINK_KEYS = ["privacyPolicy", "termsOfService", "support"] as const;
 
@@ -19,18 +20,33 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex items-center gap-6 sm:gap-8">
-            {FOOTER_LINK_KEYS.map((key, i) => (
-              <a
-                key={key}
-                href={siteConfig.footerLinks[i].href}
-                className="text-sm text-gray-400 hover:text-cyan transition-colors duration-200"
-                {...(siteConfig.footerLinks[i].href.startsWith("mailto:")
-                  ? {}
-                  : { target: "_blank", rel: "noopener noreferrer" })}
-              >
-                {t(key)}
-              </a>
-            ))}
+            {FOOTER_LINK_KEYS.map((key, i) => {
+              const href = siteConfig.footerLinks[i].href;
+
+              if (href.startsWith("mailto:")) {
+                return (
+                  <a
+                    key={key}
+                    href={href}
+                    className="text-sm text-gray-400 hover:text-cyan transition-colors duration-200"
+                  >
+                    {t(key)}
+                  </a>
+                );
+              }
+
+              return (
+                <Link
+                  key={key}
+                  href={href}
+                  className="text-sm text-gray-400 hover:text-cyan transition-colors duration-200"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {t(key)}
+                </Link>
+              );
+            })}
           </div>
 
           {/* Copyright */}

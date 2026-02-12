@@ -1,10 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useMemo } from "react";
+import { useRef, useMemo } from "react";
 import {
   motion,
-  useMotionValue,
-  useTransform,
   useReducedMotion,
 } from "framer-motion";
 
@@ -171,22 +169,6 @@ function makeArc(a: { x: number; y: number }, b: { x: number; y: number }) {
 export default function AnimatedGlobe() {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const tx = useTransform(mouseX, [-400, 400], [-6, 6]);
-  const ty = useTransform(mouseY, [-400, 400], [-4, 4]);
-
-  useEffect(() => {
-    if (prefersReduced) return;
-    const onMove = (e: MouseEvent) => {
-      const r = containerRef.current?.getBoundingClientRect();
-      if (!r) return;
-      mouseX.set(e.clientX - (r.left + r.width / 2));
-      mouseY.set(e.clientY - (r.top + r.height / 2));
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, [mouseX, mouseY, prefersReduced]);
 
   const landDots = useMemo(() => LAND.map(([lo, la]) => toSVG(lo, la)), []);
   const cityDots = useMemo(() => CITIES.map((c) => ({ ...toSVG(c.lon, c.lat), label: c.label })), []);
@@ -202,10 +184,7 @@ export default function AnimatedGlobe() {
         }}
       />
 
-      <motion.div
-        style={prefersReduced ? {} : { x: tx, y: ty }}
-        className="relative w-full"
-      >
+      <div className="relative w-full">
         <svg viewBox={`0 0 ${VW} ${VH}`} fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
           <defs>
             <linearGradient id="arcG" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -308,7 +287,7 @@ export default function AnimatedGlobe() {
               );
             })}
         </svg>
-      </motion.div>
+      </div>
     </div>
   );
 }
