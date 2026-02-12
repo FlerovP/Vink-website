@@ -240,7 +240,7 @@ export default function SupportChat() {
                   onKeyDown={handleKeyDown}
                   placeholder={t("placeholder")}
                   disabled={isStreaming}
-                  className="flex-1 px-4 py-2.5 rounded-xl bg-gray-50 text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan/20 transition-shadow disabled:opacity-50"
+                  className="flex-1 px-4 py-2.5 rounded-xl bg-gray-50 text-base sm:text-sm text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan/20 transition-shadow disabled:opacity-50"
                 />
                 <button
                   onClick={sendMessage}
