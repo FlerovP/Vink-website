@@ -137,7 +137,7 @@ export default function Hero() {
             initial={prefersReduced ? {} : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="relative h-[350px] sm:h-[400px] lg:h-[500px]"
+            className="relative h-[380px] sm:h-[450px] lg:h-[560px]"
           >
             <AnimatedGlobe />
           </motion.div>
