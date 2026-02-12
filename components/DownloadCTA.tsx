@@ -23,7 +23,7 @@ export default function DownloadCTA() {
           <div
             className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-20 pointer-events-none"
             style={{
-              background: "radial-gradient(circle, rgba(91,154,255,0.4), transparent 70%)",
+              background: "radial-gradient(circle, rgba(40,117,255,0.4), transparent 70%)",
               filter: "blur(60px)",
               transform: "translate(30%, -30%)",
             }}
@@ -47,7 +47,7 @@ export default function DownloadCTA() {
               className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight"
             >
               Ready to travel{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-aqua to-cyan-light glow-text">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua glow-text">
                 connected
               </span>
               ?

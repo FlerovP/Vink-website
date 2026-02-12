@@ -134,7 +134,7 @@ export default function CoverageMap() {
             className="absolute inset-0 opacity-30 pointer-events-none"
             style={{
               background:
-                "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(40,117,255,0.15), transparent 70%)",
+                "radial-gradient(ellipse 60% 50% at 50% 50%, rgba(0,89,249,0.15), transparent 70%)",
             }}
           />
 
