@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 
 // Simplified world map dots - represents major land masses as a dot grid
 // Each dot is [x, y] in a 100x50 coordinate space
@@ -83,6 +84,7 @@ const worldDots: [number, number][] = [
 
 export default function CoverageMap() {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("coverage");
 
   return (
     <section id="coverage" className="section-padding relative z-10 overflow-hidden">
@@ -96,7 +98,7 @@ export default function CoverageMap() {
             transition={{ duration: 0.5 }}
             className="inline-block text-sm font-semibold text-cyan uppercase tracking-wider mb-3"
           >
-            Global Coverage
+            {t("label")}
           </motion.span>
           <motion.h2
             initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
@@ -105,9 +107,9 @@ export default function CoverageMap() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4"
           >
-            One eSIM,{" "}
+            {t("title")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-              global coverage
+              {t("titleHighlight")}
             </span>
           </motion.h2>
           <motion.p
@@ -117,7 +119,7 @@ export default function CoverageMap() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-gray-500 text-lg max-w-2xl mx-auto"
           >
-            Works in 180+ countries across every continent. One eSIM is all you need for seamless connectivity worldwide.
+            {t("description")}
           </motion.p>
         </div>
 
@@ -205,7 +207,7 @@ export default function CoverageMap() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              180+ countries covered
+              {t("badge")}
             </div>
           </div>
         </motion.div>

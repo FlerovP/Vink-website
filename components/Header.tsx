@@ -2,11 +2,16 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
+import LanguageSwitcher from "./LanguageSwitcher";
+
+const NAV_KEYS = ["product", "howItWorks", "coverage", "rates", "faq"] as const;
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const t = useTranslations();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,27 +68,28 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
-            {siteConfig.nav.map((item) => (
+            {NAV_KEYS.map((key, i) => (
               <button
-                key={item.href}
-                onClick={() => handleNavClick(item.href)}
+                key={key}
+                onClick={() => handleNavClick(siteConfig.navHrefs[i])}
                 className="text-sm font-medium text-gray-600 hover:text-cyan transition-colors duration-200 relative group"
               >
-                {item.label}
+                {t(`nav.${key}`)}
                 <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-cyan transition-all duration-300 group-hover:w-full" />
               </button>
             ))}
           </div>
 
-          {/* Desktop CTA Buttons */}
+          {/* Desktop CTA Buttons + Language Switcher */}
           <div className="hidden md:flex items-center gap-3">
+            <LanguageSwitcher />
             <a
               href={siteConfig.loginUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="text-sm font-medium text-gray-600 hover:text-cyan transition-colors duration-200 px-4 py-2"
             >
-              Log in
+              {t("header.login")}
             </a>
             <a
               href={siteConfig.downloadUrl}
@@ -91,7 +97,7 @@ export default function Header() {
               rel="noopener noreferrer"
               className="btn-primary text-sm !py-2.5 !px-5"
             >
-              Download
+              {t("header.download")}
             </a>
           </div>
 
@@ -99,7 +105,7 @@ export default function Header() {
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden relative w-8 h-8 flex flex-col items-center justify-center gap-1.5"
-            aria-label="Toggle menu"
+            aria-label={t("header.toggleMenu")}
             aria-expanded={mobileMenuOpen}
           >
             <motion.span
@@ -140,21 +146,25 @@ export default function Header() {
             className="fixed inset-0 z-40 bg-white/95 backdrop-blur-xl md:hidden"
           >
             <div className="flex flex-col items-center justify-center h-full gap-6 pt-16">
-              {siteConfig.nav.map((item, i) => (
+              {NAV_KEYS.map((key, i) => (
                 <motion.button
-                  key={item.href}
+                  key={key}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 10 }}
                   transition={{ delay: i * 0.05, duration: 0.3 }}
-                  onClick={() => handleNavClick(item.href)}
+                  onClick={() => handleNavClick(siteConfig.navHrefs[i])}
                   className="text-lg font-medium text-gray-700 hover:text-cyan transition-colors"
                 >
-                  {item.label}
+                  {t(`nav.${key}`)}
                 </motion.button>
               ))}
 
-              <div className="flex flex-col gap-3 mt-6 w-56">
+              <div className="mt-4">
+                <LanguageSwitcher />
+              </div>
+
+              <div className="flex flex-col gap-3 mt-2 w-56">
                 <a
                   href={siteConfig.loginUrl}
                   target="_blank"
@@ -162,7 +172,7 @@ export default function Header() {
                   className="btn-secondary text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Log in
+                  {t("header.login")}
                 </a>
                 <a
                   href={siteConfig.downloadUrl}
@@ -171,7 +181,7 @@ export default function Header() {
                   className="btn-primary text-center"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Download
+                  {t("header.download")}
                 </a>
               </div>
             </div>

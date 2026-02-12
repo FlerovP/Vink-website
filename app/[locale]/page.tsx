@@ -1,3 +1,4 @@
+import { setRequestLocale } from "next-intl/server";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import USPGrid from "@/components/USPGrid";
@@ -11,9 +12,16 @@ import GlowOrbs from "@/components/GlowOrbs";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import { fetchRates, getTopRates } from "@/lib/rates";
 
-export const revalidate = 60; // ISR: rebuild every 60 seconds
+export const revalidate = 60;
 
-export default async function Home() {
+export default async function Home({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
   const allRates = await fetchRates();
   const topRates = getTopRates(allRates, 8);
 

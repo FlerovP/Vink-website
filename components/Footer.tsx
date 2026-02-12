@@ -1,8 +1,13 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 
+const FOOTER_LINK_KEYS = ["privacyPolicy", "termsOfService", "support"] as const;
+
 export default function Footer() {
+  const t = useTranslations("footer");
+
   return (
     <footer className="relative z-10 border-t border-gray-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
@@ -14,22 +19,24 @@ export default function Footer() {
 
           {/* Links */}
           <div className="flex items-center gap-6 sm:gap-8">
-            {siteConfig.footer.links.map((link) => (
+            {FOOTER_LINK_KEYS.map((key, i) => (
               <a
-                key={link.label}
-                href={link.href}
+                key={key}
+                href={siteConfig.footerLinks[i].href}
                 className="text-sm text-gray-400 hover:text-cyan transition-colors duration-200"
-                {...(link.href.startsWith("mailto:")
+                {...(siteConfig.footerLinks[i].href.startsWith("mailto:")
                   ? {}
                   : { target: "_blank", rel: "noopener noreferrer" })}
               >
-                {link.label}
+                {t(key)}
               </a>
             ))}
           </div>
 
           {/* Copyright */}
-          <p className="text-sm text-gray-400">{siteConfig.footer.copyright}</p>
+          <p className="text-sm text-gray-400">
+            {t("copyright", { year: new Date().getFullYear() })}
+          </p>
         </div>
       </div>
     </footer>

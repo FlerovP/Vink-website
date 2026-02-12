@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -65,6 +66,7 @@ const cardVariantsReduced = {
 
 export default function USPGrid() {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("usps");
 
   return (
     <section className="section-padding relative z-10">
@@ -78,7 +80,7 @@ export default function USPGrid() {
             transition={{ duration: 0.5 }}
             className="inline-block text-sm font-semibold text-cyan uppercase tracking-wider mb-3"
           >
-            Why VINK SIM
+            {t("label")}
           </motion.span>
           <motion.h2
             initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
@@ -87,9 +89,9 @@ export default function USPGrid() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl font-bold text-gray-900"
           >
-            Everything you need,{" "}
+            {t("title")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-              nothing you don&apos;t
+              {t("titleHighlight")}
             </span>
           </motion.h2>
         </div>
@@ -102,7 +104,7 @@ export default function USPGrid() {
           viewport={{ once: true, margin: "-80px" }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"
         >
-          {siteConfig.usps.map((usp, i) => (
+          {siteConfig.uspIcons.map((icon, i) => (
             <motion.div
               key={i}
               variants={prefersReduced ? cardVariantsReduced : cardVariants}
@@ -110,15 +112,15 @@ export default function USPGrid() {
             >
               {/* Icon */}
               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan/10 to-aqua/10 flex items-center justify-center text-cyan mb-5 group-hover:scale-110 transition-transform duration-300">
-                {iconMap[usp.icon] || iconMap.globe}
+                {iconMap[icon] || iconMap.globe}
               </div>
 
               {/* Text */}
               <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                {usp.title}
+                {t(`items.${i}.title`)}
               </h3>
               <p className="text-sm text-gray-500 leading-relaxed">
-                {usp.description}
+                {t(`items.${i}.description`)}
               </p>
 
               {/* Hover glow accent */}

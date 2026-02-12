@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import type { CountryRate } from "@/lib/rates";
 import CountryPopup from "@/components/CountryPopup";
 
@@ -40,6 +41,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
   const [query, setQuery] = useState("");
   const [selectedRate, setSelectedRate] = useState<CountryRate | null>(null);
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("ratesPage");
 
   const filtered = useMemo(() => {
     if (!query.trim()) return rates;
@@ -68,7 +70,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
         </div>
         <input
           type="text"
-          placeholder="Search country..."
+          placeholder={t("searchPlaceholder")}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="w-full pl-12 pr-4 py-3.5 rounded-2xl glass text-gray-800 placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan/30 transition-shadow text-base"
@@ -77,7 +79,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
           <button
             onClick={() => setQuery("")}
             className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Clear search"
+            aria-label={t("clearSearch")}
           >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -88,7 +90,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
 
       {/* Results count */}
       <p className="text-center text-sm text-gray-400 mb-8">
-        {filtered.length} {filtered.length === 1 ? "country" : "countries"} found
+        {t("countriesFound", { count: filtered.length })}
       </p>
 
       {/* Rates Grid */}
@@ -129,14 +131,14 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
               {/* Operator count */}
               {rate.operatorCount > 1 && (
                 <p className="text-[10px] text-gray-400 mt-2 text-center sm:text-left">
-                  {rate.operatorCount} operators available
+                  {t("operatorsAvailable", { count: rate.operatorCount })}
                 </p>
               )}
 
               {/* Cheap badge */}
               {i === 0 && !query && (
                 <span className="absolute top-2 right-2 sm:top-3 sm:right-3 text-[9px] sm:text-[10px] font-semibold text-cyan bg-cyan/10 px-2 py-0.5 rounded-full">
-                  Cheapest
+                  {t("cheapest")}
                 </span>
               )}
 
@@ -147,12 +149,12 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
         </motion.div>
       ) : (
         <div className="text-center py-16">
-          <p className="text-gray-400 text-lg">No countries found for &ldquo;{query}&rdquo;</p>
+          <p className="text-gray-400 text-lg">{t("noResults", { query })}</p>
           <button
             onClick={() => setQuery("")}
             className="mt-4 text-cyan hover:text-aqua transition-colors text-sm font-medium"
           >
-            Clear search
+            {t("clearSearch")}
           </button>
         </div>
       )}

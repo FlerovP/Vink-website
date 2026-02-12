@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 import { fetchRates } from "@/lib/rates";
 import RatesSearch from "@/components/RatesSearch";
@@ -7,13 +7,28 @@ import NoiseOverlay from "@/components/NoiseOverlay";
 
 export const revalidate = 60;
 
-export const metadata: Metadata = {
-  title: "All Rates — VINK SIM",
-  description:
-    "Browse data rates for 180+ countries. Pay-as-you-go pricing per GB with VINK eSIM.",
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "ratesPage" });
+  return {
+    title: t("title"),
+    description: t("description"),
+  };
+}
 
-export default async function AllRatesPage() {
+export default async function AllRatesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  setRequestLocale(locale);
+
+  const t = await getTranslations("ratesPage");
   const rates = await fetchRates();
 
   return (
@@ -34,7 +49,7 @@ export default async function AllRatesPage() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
               </svg>
-              Back to Home
+              {t("backToHome")}
             </Link>
             <Link href="/" className="text-lg font-bold text-gray-900">
               VINK<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua"> SIM</span>
@@ -47,16 +62,16 @@ export default async function AllRatesPage() {
           {/* Page Header */}
           <div className="text-center mb-12">
             <span className="inline-block text-sm font-semibold text-cyan uppercase tracking-wider mb-3">
-              All Rates
+              {t("label")}
             </span>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Data rates for{" "}
+              {t("heading")}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-                {rates.length}+ countries
+                {t("headingHighlight", { count: rates.length })}
               </span>
             </h1>
             <p className="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto">
-              Pay only for what you use. Prices shown per 1 GB in USD. We show the cheapest available rate per country.
+              {t("subtitle")}
             </p>
 
             {/* Price badge */}
@@ -64,7 +79,7 @@ export default async function AllRatesPage() {
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
-              Price per 1 GB · USD
+              {t("priceBadge")}
             </div>
           </div>
 
@@ -73,8 +88,7 @@ export default async function AllRatesPage() {
 
           {/* Disclaimer */}
           <p className="text-center text-xs text-gray-400 mt-12 max-w-xl mx-auto">
-            Actual rate depends on the network operator your SIM connects to. Rates are updated in real time and may vary.
-            Multiple operators may be available per country — the cheapest rate is shown.
+            {t("disclaimer")}
           </p>
         </main>
       </div>

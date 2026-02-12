@@ -1,10 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 
 export default function DownloadCTA() {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("downloadCta");
 
   return (
     <section className="section-padding relative z-10">
@@ -46,9 +48,9 @@ export default function DownloadCTA() {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-4 leading-tight"
             >
-              Ready to travel{" "}
+              {t("title")}{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua glow-text">
-                connected
+                {t("titleHighlight")}
               </span>
               ?
             </motion.h2>
@@ -60,7 +62,7 @@ export default function DownloadCTA() {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="text-slate-text text-lg max-w-xl mx-auto mb-10"
             >
-              Download VINK SIM, top up your balance, and stay connected in 180+ countries with zero hassle.
+              {t("description")}
             </motion.p>
 
             <motion.div
@@ -89,7 +91,7 @@ export default function DownloadCTA() {
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                   />
                 </svg>
-                Download App
+                {t("downloadApp")}
               </a>
               <a
                 href={siteConfig.loginUrl}
@@ -97,7 +99,7 @@ export default function DownloadCTA() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-transparent text-white font-semibold rounded-full border border-white/20 transition-all duration-300 hover:bg-white/10 hover:-translate-y-0.5"
               >
-                Log in
+                {t("login")}
               </a>
             </motion.div>
           </div>

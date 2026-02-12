@@ -1,11 +1,13 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 import AnimatedGlobe from "./AnimatedGlobe";
 
 export default function Hero() {
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("hero");
 
   return (
     <section
@@ -22,24 +24,13 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
               className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-gray-900"
             >
-              {siteConfig.hero.headline.split("\n").map((line, i) => (
-                <span key={i}>
-                  {i === 0 ? (
-                    <>
-                      Mobile data in{" "}
-                      <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-                        180+ countries
-                      </span>
-                      .
-                    </>
-                  ) : (
-                    <>
-                      <br />
-                      {line}
-                    </>
-                  )}
-                </span>
-              ))}
+              {t("headlinePart1")}{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
+                {t("headlineHighlight")}
+              </span>
+              .
+              <br />
+              {t("headlinePart2")}
             </motion.h1>
 
             <motion.p
@@ -48,7 +39,7 @@ export default function Hero() {
               transition={{ duration: 0.7, delay: 0.25, ease: [0.16, 1, 0.3, 1] }}
               className="text-lg sm:text-xl text-gray-500 max-w-xl mx-auto lg:mx-0 leading-relaxed"
             >
-              {siteConfig.hero.subheadline}
+              {t("subheadline")}
             </motion.p>
 
             <motion.div
@@ -76,7 +67,7 @@ export default function Hero() {
                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                   />
                 </svg>
-                {siteConfig.hero.primaryCta}
+                {t("primaryCta")}
               </a>
               <a
                 href="#rates"
@@ -88,7 +79,7 @@ export default function Hero() {
                 }}
                 className="btn-secondary text-sm sm:text-base px-5 sm:px-8 py-3 sm:py-3.5"
               >
-                {siteConfig.hero.secondaryCta}
+                {t("secondaryCta")}
               </a>
             </motion.div>
 
@@ -107,7 +98,7 @@ export default function Hero() {
                     clipRule="evenodd"
                   />
                 </svg>
-                No contracts
+                {t("badgeNoContracts")}
               </span>
               <span className="flex items-center gap-1.5">
                 <svg className="w-4 h-4 text-cyan" fill="currentColor" viewBox="0 0 20 20">
@@ -117,7 +108,7 @@ export default function Hero() {
                     clipRule="evenodd"
                   />
                 </svg>
-                eSIM only
+                {t("badgeEsim")}
               </span>
               <span className="flex items-center gap-1.5">
                 <svg className="w-4 h-4 text-cyan" fill="currentColor" viewBox="0 0 20 20">
@@ -127,7 +118,7 @@ export default function Hero() {
                     clipRule="evenodd"
                   />
                 </svg>
-                Per-MB billing
+                {t("badgePerMb")}
               </span>
             </motion.div>
           </div>

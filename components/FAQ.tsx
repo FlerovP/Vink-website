@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
-import { siteConfig } from "@/config/site";
+import { useTranslations } from "next-intl";
 
 function FAQItem({
   question,
@@ -75,9 +75,12 @@ function FAQItem({
   );
 }
 
+const FAQ_COUNT = 7;
+
 export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("faq");
 
   return (
     <section id="faq" className="section-padding relative z-10">
@@ -91,7 +94,7 @@ export default function FAQ() {
             transition={{ duration: 0.5 }}
             className="inline-block text-sm font-semibold text-cyan uppercase tracking-wider mb-3"
           >
-            FAQ
+            {t("label")}
           </motion.span>
           <motion.h2
             initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
@@ -100,20 +103,20 @@ export default function FAQ() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl font-bold text-gray-900"
           >
-            Frequently asked{" "}
+            {t("title")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-              questions
+              {t("titleHighlight")}
             </span>
           </motion.h2>
         </div>
 
         {/* FAQ Items */}
         <div className="glass rounded-2xl px-6 sm:px-8 divide-y-0">
-          {siteConfig.faq.map((item, i) => (
+          {Array.from({ length: FAQ_COUNT }, (_, i) => (
             <FAQItem
               key={i}
-              question={item.question}
-              answer={item.answer}
+              question={t(`items.${i}.question`)}
+              answer={t(`items.${i}.answer`)}
               isOpen={openIndex === i}
               onToggle={() => setOpenIndex(openIndex === i ? null : i)}
               index={i}

@@ -7,7 +7,7 @@ import {
   useTransform,
   useReducedMotion,
 } from "framer-motion";
-import { siteConfig } from "@/config/site";
+import { useTranslations } from "next-intl";
 
 const stepIcons = [
   // Download icon
@@ -27,6 +27,7 @@ const stepIcons = [
 export default function HowItWorks() {
   const containerRef = useRef<HTMLDivElement>(null);
   const prefersReduced = useReducedMotion();
+  const t = useTranslations("steps");
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -47,7 +48,7 @@ export default function HowItWorks() {
             transition={{ duration: 0.5 }}
             className="inline-block text-sm font-semibold text-cyan uppercase tracking-wider mb-3"
           >
-            How it works
+            {t("label")}
           </motion.span>
           <motion.h2
             initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
@@ -56,9 +57,9 @@ export default function HowItWorks() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="text-3xl sm:text-4xl font-bold text-gray-900"
           >
-            Connected in{" "}
+            {t("title")}{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan to-aqua">
-              three steps
+              {t("titleHighlight")}
             </span>
           </motion.h2>
         </div>
@@ -78,7 +79,7 @@ export default function HowItWorks() {
 
           {/* Steps */}
           <div className="space-y-12 sm:space-y-16">
-            {siteConfig.steps.map((step, i) => (
+            {[0, 1, 2].map((i) => (
               <motion.div
                 key={i}
                 initial={prefersReduced ? {} : { opacity: 0, x: -20 }}
@@ -111,13 +112,13 @@ export default function HowItWorks() {
                 {/* Content */}
                 <div className="pt-1 sm:pt-3">
                   <span className="text-xs font-semibold text-cyan uppercase tracking-wider">
-                    Step {step.number}
+                    {t("stepLabel", { number: i + 1 })}
                   </span>
                   <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1">
-                    {step.title}
+                    {t(`items.${i}.title`)}
                   </h3>
                   <p className="text-gray-500 mt-2 max-w-md leading-relaxed">
-                    {step.description}
+                    {t(`items.${i}.description`)}
                   </p>
                 </div>
               </motion.div>

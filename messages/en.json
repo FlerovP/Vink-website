@@ -1,0 +1,172 @@
+{
+  "meta": {
+    "title": "VINK SIM — Mobile Data in 180+ Countries",
+    "description": "Pay-as-you-go eSIM: top up once, use anywhere, balance never burns. One eSIM for 180+ countries with transparent per-MB pricing.",
+    "keywords": "eSIM, travel data, pay-as-you-go, mobile data, international roaming, VINK SIM"
+  },
+  "header": {
+    "login": "Log in",
+    "download": "Download",
+    "toggleMenu": "Toggle menu"
+  },
+  "nav": {
+    "product": "Product",
+    "howItWorks": "How it works",
+    "coverage": "Coverage",
+    "rates": "Rates",
+    "faq": "FAQ"
+  },
+  "hero": {
+    "headlinePart1": "Mobile data in",
+    "headlineHighlight": "180+ countries",
+    "headlinePart2": "No packages. No expiration.",
+    "subheadline": "Pay-as-you-go eSIM: top up once, use anywhere, balance never burns.",
+    "primaryCta": "Download App",
+    "secondaryCta": "See Rates",
+    "badgeNoContracts": "No contracts",
+    "badgeEsim": "eSIM only",
+    "badgePerMb": "Per-MB billing"
+  },
+  "usps": {
+    "label": "Why VINK SIM",
+    "title": "Everything you need,",
+    "titleHighlight": "nothing you don't",
+    "items": {
+      "0": {
+        "title": "Forever eSIM",
+        "description": "Your eSIM stays active indefinitely. Balance doesn't expire — ever."
+      },
+      "1": {
+        "title": "Pay-as-you-go",
+        "description": "No bundles, no packages. You're charged per MB at the local country rate."
+      },
+      "2": {
+        "title": "180+ Countries",
+        "description": "One single eSIM for worldwide travel. No swapping, no hassle."
+      },
+      "3": {
+        "title": "Instant Setup",
+        "description": "Download the app, install your eSIM, and get connected in minutes."
+      },
+      "4": {
+        "title": "Transparent Pricing",
+        "description": "See the exact rate per GB for every country before you travel."
+      },
+      "5": {
+        "title": "Real-time Usage",
+        "description": "Track your data usage and balance in real time, right in the app."
+      }
+    }
+  },
+  "steps": {
+    "label": "How it works",
+    "title": "Connected in",
+    "titleHighlight": "three steps",
+    "stepLabel": "Step {number}",
+    "items": {
+      "0": {
+        "title": "Download & Install",
+        "description": "Get the VINK SIM app and install your eSIM profile in minutes."
+      },
+      "1": {
+        "title": "Top Up Balance",
+        "description": "Add funds to your balance. No packages to choose — just a simple top-up."
+      },
+      "2": {
+        "title": "Travel & Stay Connected",
+        "description": "Land in any of 180+ countries and data connects automatically at the local rate."
+      }
+    }
+  },
+  "coverage": {
+    "label": "Global Coverage",
+    "title": "One eSIM,",
+    "titleHighlight": "global coverage",
+    "description": "Works in 180+ countries across every continent. One eSIM is all you need for seamless connectivity worldwide.",
+    "badge": "180+ countries covered"
+  },
+  "rates": {
+    "label": "Rates",
+    "title": "Simple,",
+    "titleHighlight": "transparent pricing",
+    "description": "Pay only for what you use. Here are sample rates for popular destinations.",
+    "priceBadge": "Price per 1 GB · USD",
+    "cheapest": "Cheapest",
+    "viewAll": "View All Rates",
+    "disclaimer": "Actual rate depends on the network operator your SIM connects to. Rates are updated in real time and may vary.",
+    "perGb": "/GB"
+  },
+  "ratesPage": {
+    "title": "All Rates — VINK SIM",
+    "description": "Browse data rates for 180+ countries. Pay-as-you-go pricing per GB with VINK eSIM.",
+    "backToHome": "Back to Home",
+    "label": "All Rates",
+    "heading": "Data rates for",
+    "headingHighlight": "{count}+ countries",
+    "subtitle": "Pay only for what you use. Prices shown per 1 GB in USD. We show the cheapest available rate per country.",
+    "priceBadge": "Price per 1 GB · USD",
+    "disclaimer": "Actual rate depends on the network operator your SIM connects to. Rates are updated in real time and may vary. Multiple operators may be available per country — the cheapest rate is shown.",
+    "searchPlaceholder": "Search country...",
+    "clearSearch": "Clear search",
+    "countriesFound": "{count} {count, plural, one {country} other {countries}} found",
+    "operatorsAvailable": "{count} operators available",
+    "noResults": "No countries found for \"{query}\"",
+    "cheapest": "Cheapest"
+  },
+  "popup": {
+    "close": "Close",
+    "from": "from",
+    "perGb": "/GB",
+    "ctaText": "Get connected to mobile data in {country}",
+    "downloadApp": "Download App",
+    "continueInBrowser": "Continue in Browser"
+  },
+  "downloadCta": {
+    "title": "Ready to travel",
+    "titleHighlight": "connected",
+    "description": "Download VINK SIM, top up your balance, and stay connected in 180+ countries with zero hassle.",
+    "downloadApp": "Download App",
+    "login": "Log in"
+  },
+  "faq": {
+    "label": "FAQ",
+    "title": "Frequently asked",
+    "titleHighlight": "questions",
+    "items": {
+      "0": {
+        "question": "Do I need to buy a data package?",
+        "answer": "No. VINK SIM is entirely pay-as-you-go. You top up your balance and data is charged per MB at the local country rate. No packages, no commitments."
+      },
+      "1": {
+        "question": "Does my balance expire?",
+        "answer": "Never. Your balance stays on your account indefinitely. Top up once and use it whenever you travel — no rush, no deadlines."
+      },
+      "2": {
+        "question": "How do I know the rate in a country?",
+        "answer": "Open the app and check the Rates section. Every country's price per GB is shown upfront before you connect."
+      },
+      "3": {
+        "question": "Can I keep the same eSIM forever?",
+        "answer": "Yes. Your VINK eSIM never expires. Install it once and use it across all your trips, no matter how far apart they are."
+      },
+      "4": {
+        "question": "How is data billed?",
+        "answer": "Data is billed per megabyte from your balance at the local country rate. You only pay for what you actually use."
+      },
+      "5": {
+        "question": "Does it work on all phones?",
+        "answer": "VINK SIM works on any eSIM-compatible device, including most modern iPhones (XS and later), Samsung Galaxy, Google Pixel, and many more."
+      },
+      "6": {
+        "question": "How fast is the setup?",
+        "answer": "Most users are connected within 5 minutes. Download the app, scan the QR code or install directly, and you're ready to go."
+      }
+    }
+  },
+  "footer": {
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "support": "Support",
+    "copyright": "© {year} VINK SIM. All rights reserved."
+  }
+}
