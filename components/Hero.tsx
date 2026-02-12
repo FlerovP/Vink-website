@@ -55,7 +55,7 @@ export default function Hero() {
               initial={prefersReduced ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-center justify-center lg:justify-start"
+              className="flex flex-row gap-3 sm:gap-4 justify-center lg:justify-start"
             >
               <a
                 href={siteConfig.downloadUrl}
