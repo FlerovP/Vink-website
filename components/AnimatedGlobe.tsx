@@ -8,144 +8,135 @@ import {
   useReducedMotion,
 } from "framer-motion";
 
-/* ─── Simplified continent dots [lon, lat] ─── */
-/* Each dot represents a land cell on a ~5° grid covering the major continents */
-const LAND_DOTS: [number, number][] = [
-  // North America
-  [-130,55],[-125,55],[-120,55],[-115,55],[-110,55],[-105,55],[-100,55],[-95,55],[-90,55],[-85,55],[-80,55],[-75,55],[-70,55],[-65,55],
-  [-135,50],[-130,50],[-125,50],[-120,50],[-115,50],[-110,50],[-105,50],[-100,50],[-95,50],[-90,50],[-85,50],[-80,50],[-75,50],[-70,50],[-65,50],[-60,50],
-  [-130,45],[-125,45],[-120,45],[-115,45],[-110,45],[-105,45],[-100,45],[-95,45],[-90,45],[-85,45],[-80,45],[-75,45],[-70,45],[-65,45],
-  [-125,40],[-120,40],[-115,40],[-110,40],[-105,40],[-100,40],[-95,40],[-90,40],[-85,40],[-80,40],[-75,40],
-  [-120,35],[-115,35],[-110,35],[-105,35],[-100,35],[-95,35],[-90,35],[-85,35],[-80,35],
-  [-115,30],[-110,30],[-105,30],[-100,30],[-95,30],[-90,30],[-85,30],[-80,30],
-  [-110,25],[-105,25],[-100,25],[-95,25],[-90,25],[-85,25],
-  [-105,20],[-100,20],[-95,20],[-90,20],
-  [-100,15],[-95,15],[-90,15],[-85,15],
-  // Central America
-  [-90,15],[-85,15],[-85,10],[-80,10],[-75,10],
-  // South America
-  [-80,5],[-75,5],[-70,5],[-65,5],[-60,5],[-55,5],
-  [-80,0],[-75,0],[-70,0],[-65,0],[-60,0],[-55,0],[-50,0],
-  [-75,-5],[-70,-5],[-65,-5],[-60,-5],[-55,-5],[-50,-5],[-45,-5],[-40,-5],[-35,-5],
-  [-70,-10],[-65,-10],[-60,-10],[-55,-10],[-50,-10],[-45,-10],[-40,-10],[-35,-10],
-  [-70,-15],[-65,-15],[-60,-15],[-55,-15],[-50,-15],[-45,-15],[-40,-15],
-  [-65,-20],[-60,-20],[-55,-20],[-50,-20],[-45,-20],
-  [-60,-25],[-55,-25],[-50,-25],[-45,-25],
-  [-55,-30],[-50,-30],[-45,-30],
-  [-55,-35],[-50,-35],
-  [-50,-40],
-  // Europe
-  [-10,60],[-5,60],[0,60],[5,60],[10,60],[15,60],[20,60],[25,60],[30,60],[35,60],[40,60],
-  [-10,55],[-5,55],[0,55],[5,55],[10,55],[15,55],[20,55],[25,55],[30,55],[35,55],[40,55],[45,55],[50,55],
-  [-10,50],[-5,50],[0,50],[5,50],[10,50],[15,50],[20,50],[25,50],[30,50],[35,50],[40,50],[45,50],[50,50],
-  [-10,45],[-5,45],[0,45],[5,45],[10,45],[15,45],[20,45],[25,45],[30,45],[35,45],[40,45],
-  [-10,40],[-5,40],[0,40],[5,40],[10,40],[15,40],[20,40],[25,40],[30,40],
-  [-10,35],[-5,35],[0,35],[5,35],[10,35],[15,35],[20,35],[25,35],[30,35],[35,35],
-  // Africa
-  [-15,30],[-10,30],[-5,30],[0,30],[5,30],[10,30],[15,30],[20,30],[25,30],[30,30],[35,30],
-  [-15,25],[-10,25],[-5,25],[0,25],[5,25],[10,25],[15,25],[20,25],[25,25],[30,25],[35,25],[40,25],
-  [-15,20],[-10,20],[-5,20],[0,20],[5,20],[10,20],[15,20],[20,20],[25,20],[30,20],[35,20],[40,20],[45,20],
-  [-15,15],[-10,15],[-5,15],[0,15],[5,15],[10,15],[15,15],[20,15],[25,15],[30,15],[35,15],[40,15],[45,15],[50,15],
-  [-15,10],[-10,10],[-5,10],[0,10],[5,10],[10,10],[15,10],[20,10],[25,10],[30,10],[35,10],[40,10],[45,10],
-  [5,5],[10,5],[15,5],[20,5],[25,5],[30,5],[35,5],[40,5],
-  [10,0],[15,0],[20,0],[25,0],[30,0],[35,0],[40,0],
-  [15,-5],[20,-5],[25,-5],[30,-5],[35,-5],[40,-5],
-  [20,-10],[25,-10],[30,-10],[35,-10],[40,-10],
-  [20,-15],[25,-15],[30,-15],[35,-15],
-  [25,-20],[30,-20],[35,-20],
-  [25,-25],[30,-25],[35,-25],
-  [27,-30],[30,-30],
-  // Middle East
-  [35,35],[40,35],[45,35],[50,35],[55,35],
-  [35,30],[40,30],[45,30],[50,30],[55,30],[60,30],
-  [40,25],[45,25],[50,25],[55,25],[60,25],[65,25],
-  [45,20],[50,20],[55,20],
-  // Russia / Central & North Asia
-  [55,60],[60,60],[65,60],[70,60],[75,60],[80,60],[85,60],[90,60],[95,60],[100,60],[105,60],[110,60],[115,60],[120,60],[125,60],[130,60],[135,60],[140,60],[145,60],[150,60],[155,60],[160,60],[165,60],[170,60],
-  [55,55],[60,55],[65,55],[70,55],[75,55],[80,55],[85,55],[90,55],[95,55],[100,55],[105,55],[110,55],[115,55],[120,55],[125,55],[130,55],[135,55],[140,55],[145,55],[150,55],[155,55],[160,55],
-  [55,50],[60,50],[65,50],[70,50],[75,50],[80,50],[85,50],[90,50],[95,50],[100,50],[105,50],[110,50],[115,50],[120,50],[125,50],[130,50],[135,50],[140,50],
-  [60,45],[65,45],[70,45],[75,45],[80,45],[85,45],[90,45],[95,45],[100,45],[105,45],[110,45],[115,45],[120,45],[125,45],[130,45],[135,45],
-  // South / Southeast Asia
-  [65,30],[70,30],[75,30],[80,30],[85,30],[90,30],[95,30],
-  [70,25],[75,25],[80,25],[85,25],[90,25],[95,25],[100,25],
-  [70,20],[75,20],[80,20],[85,20],[90,20],[95,20],[100,20],[105,20],
-  [75,15],[80,15],[85,15],[90,15],[95,15],[100,15],[105,15],[110,15],
-  [80,10],[95,10],[100,10],[105,10],[110,10],
-  [95,5],[100,5],[105,5],[110,5],[115,5],
-  [100,0],[105,0],[110,0],[115,0],
-  [105,-5],[110,-5],[115,-5],[120,-5],
-  [110,-10],[115,-10],[120,-10],
-  // East Asia (China, Korea, Japan)
-  [100,40],[105,40],[110,40],[115,40],[120,40],[125,40],[130,40],
-  [100,35],[105,35],[110,35],[115,35],[120,35],[125,35],[130,35],
-  [105,30],[110,30],[115,30],[120,30],
-  [110,25],[115,25],[120,25],
-  // Japan
-  [130,35],[135,35],[140,35],
-  [130,40],[135,40],[140,40],[145,40],
-  [140,45],[145,45],
-  // Australia
-  [115,-15],[120,-15],[125,-15],[130,-15],[135,-15],[140,-15],[145,-15],[150,-15],
-  [115,-20],[120,-20],[125,-20],[130,-20],[135,-20],[140,-20],[145,-20],[150,-20],[155,-20],
-  [115,-25],[120,-25],[125,-25],[130,-25],[135,-25],[140,-25],[145,-25],[150,-25],[155,-25],
-  [120,-30],[125,-30],[130,-30],[135,-30],[140,-30],[145,-30],[150,-30],[155,-30],
-  [130,-35],[135,-35],[140,-35],[145,-35],[150,-35],
-  [145,-40],[150,-40],
+/* ─── Land dots [lon, lat] on ~6° grid ─── */
+const LAND: [number, number][] = [
   // Greenland
-  [-55,65],[-50,65],[-45,65],[-40,65],[-35,65],
-  [-55,70],[-50,70],[-45,70],[-40,70],[-35,70],[-30,70],
-  [-50,75],[-45,75],[-40,75],[-35,75],
+  [-52,68],[-46,68],[-40,68],[-34,68],[-52,72],[-46,72],[-40,72],[-34,72],[-46,76],[-40,76],
   // Iceland
-  [-25,65],[-20,65],
-  // UK / Ireland
-  [-10,55],[-5,55],[0,55],
-  [-10,50],[-5,50],
+  [-22,64],[-18,64],
+  // North America
+  [-140,62],[-134,62],[-128,62],[-122,62],[-116,62],[-110,62],[-104,62],[-98,62],[-92,62],[-86,62],[-80,62],[-74,62],[-68,62],
+  [-134,56],[-128,56],[-122,56],[-116,56],[-110,56],[-104,56],[-98,56],[-92,56],[-86,56],[-80,56],[-74,56],[-68,56],[-62,56],
+  [-128,50],[-122,50],[-116,50],[-110,50],[-104,50],[-98,50],[-92,50],[-86,50],[-80,50],[-74,50],[-68,50],[-62,50],
+  [-128,44],[-122,44],[-116,44],[-110,44],[-104,44],[-98,44],[-92,44],[-86,44],[-80,44],[-74,44],
+  [-122,38],[-116,38],[-110,38],[-104,38],[-98,38],[-92,38],[-86,38],[-80,38],
+  [-116,32],[-110,32],[-104,32],[-98,32],[-92,32],[-86,32],[-80,32],
+  [-110,26],[-104,26],[-98,26],[-92,26],[-86,26],
+  [-104,20],[-98,20],[-92,20],[-86,20],
+  // Central America & Caribbean
+  [-92,14],[-86,14],[-80,14],
+  [-86,8],[-80,8],[-74,8],
+  // South America
+  [-80,2],[-74,2],[-68,2],[-62,2],[-56,2],[-50,2],
+  [-74,-4],[-68,-4],[-62,-4],[-56,-4],[-50,-4],[-44,-4],[-38,-4],
+  [-74,-10],[-68,-10],[-62,-10],[-56,-10],[-50,-10],[-44,-10],[-38,-10],
+  [-68,-16],[-62,-16],[-56,-16],[-50,-16],[-44,-16],[-38,-16],
+  [-62,-22],[-56,-22],[-50,-22],[-44,-22],
+  [-56,-28],[-50,-28],[-44,-28],
+  [-56,-34],[-50,-34],
+  [-50,-40],[-74,-46],[-68,-46],[-74,-52],[-68,-52],
+  // UK & Ireland
+  [-8,56],[-2,56],[-8,50],[-2,50],
+  // Europe
+  [-8,44],[-2,44],[4,44],[10,44],[16,44],[22,44],[28,44],
+  [-8,38],[-2,38],[4,38],[10,38],[16,38],[22,38],[28,38],[34,38],
+  [-2,50],[4,50],[10,50],[16,50],[22,50],[28,50],[34,50],
+  [4,56],[10,56],[16,56],[22,56],[28,56],[34,56],[40,56],
+  // Scandinavia
+  [4,62],[10,62],[16,62],[22,62],[28,62],
+  // Africa
+  [-16,32],[-10,32],[-4,32],[2,32],[8,32],[14,32],[20,32],[26,32],[32,32],
+  [-16,26],[-10,26],[-4,26],[2,26],[8,26],[14,26],[20,26],[26,26],[32,26],[38,26],
+  [-16,20],[-10,20],[-4,20],[2,20],[8,20],[14,20],[20,20],[26,20],[32,20],[38,20],[44,20],
+  [-16,14],[-10,14],[-4,14],[2,14],[8,14],[14,14],[20,14],[26,14],[32,14],[38,14],[44,14],
+  [-10,8],[-4,8],[2,8],[8,8],[14,8],[20,8],[26,8],[32,8],[38,8],[44,8],
+  [8,2],[14,2],[20,2],[26,2],[32,2],[38,2],
+  [14,-4],[20,-4],[26,-4],[32,-4],[38,-4],
+  [20,-10],[26,-10],[32,-10],[38,-10],
+  [26,-16],[32,-16],[38,-16],
+  [26,-22],[32,-22],[38,-22],
+  [26,-28],[32,-28],
+  [28,-34],
+  // Middle East
+  [34,32],[40,32],[46,32],[52,32],[58,32],
+  [40,26],[46,26],[52,26],[58,26],[64,26],
+  [46,20],[52,20],
+  // Russia
+  [40,62],[46,62],[52,62],[58,62],[64,62],[70,62],[76,62],[82,62],[88,62],[94,62],[100,62],[106,62],[112,62],[118,62],[124,62],[130,62],[136,62],[142,62],[148,62],[154,62],[160,62],[166,62],[172,62],
+  [40,56],[46,56],[52,56],[58,56],[64,56],[70,56],[76,56],[82,56],[88,56],[94,56],[100,56],[106,56],[112,56],[118,56],[124,56],[130,56],[136,56],[142,56],[148,56],[154,56],[160,56],
+  [52,50],[58,50],[64,50],[70,50],[76,50],[82,50],[88,50],[94,50],[100,50],[106,50],[112,50],[118,50],[124,50],[130,50],[136,50],[142,50],
+  // Central Asia
+  [58,44],[64,44],[70,44],[76,44],[82,44],[88,44],
+  // South Asia
+  [64,32],[70,32],[76,32],[82,32],[88,32],
+  [70,26],[76,26],[82,26],[88,26],[94,26],
+  [70,20],[76,20],[82,20],[88,20],[94,20],[100,20],
+  [76,14],[82,14],[88,14],[94,14],[100,14],[106,14],
+  [76,8],[94,8],[100,8],[106,8],
+  // East Asia
+  [94,44],[100,44],[106,44],[112,44],[118,44],[124,44],[130,44],
+  [100,38],[106,38],[112,38],[118,38],[124,38],[130,38],
+  [106,32],[112,32],[118,32],[124,32],
+  [112,26],[118,26],
+  // Japan
+  [130,38],[136,38],[142,38],
+  [130,44],[136,44],[142,44],
+  // Southeast Asia
+  [100,2],[106,2],[112,2],[118,2],
+  [100,-4],[106,-4],[112,-4],[118,-4],
+  [112,-10],[118,-10],[124,-10],
+  // Australia
+  [118,-16],[124,-16],[130,-16],[136,-16],[142,-16],[148,-16],[154,-16],
+  [118,-22],[124,-22],[130,-22],[136,-22],[142,-22],[148,-22],[154,-22],
+  [118,-28],[124,-28],[130,-28],[136,-28],[142,-28],[148,-28],[154,-28],
+  [124,-34],[130,-34],[136,-34],[142,-34],[148,-34],[154,-34],
+  [136,-40],[142,-40],[148,-40],
+  // New Zealand
+  [172,-38],[172,-44],
 ];
 
 /* ─── City markers ─── */
-const CITIES: { lon: number; lat: number; label: string }[] = [
-  { lon: -0.12, lat: 51.5, label: "London" },
-  { lon: 2.35, lat: 48.86, label: "Paris" },
-  { lon: 55.27, lat: 25.2, label: "Dubai" },
-  { lon: 72.88, lat: 19.07, label: "Mumbai" },
-  { lon: 139.69, lat: 35.68, label: "Tokyo" },
-  { lon: -74.0, lat: 40.71, label: "New York" },
-  { lon: -43.17, lat: -22.91, label: "São Paulo" },
-  { lon: 37.62, lat: 55.75, label: "Moscow" },
-  { lon: 121.47, lat: 31.23, label: "Shanghai" },
-  { lon: 28.98, lat: 41.01, label: "Istanbul" },
-  { lon: 151.2, lat: -33.87, label: "Sydney" },
-  { lon: 100.5, lat: 13.75, label: "Bangkok" },
+const CITIES = [
+  { lon: -74, lat: 40.7, label: "New York" },
+  { lon: -43, lat: -23, label: "São Paulo" },
+  { lon: -0.1, lat: 51.5, label: "London" },
+  { lon: 2.4, lat: 48.9, label: "Paris" },
+  { lon: 13, lat: 52.5, label: "Berlin" },
+  { lon: 29, lat: 41, label: "Istanbul" },
+  { lon: 37.6, lat: 55.8, label: "Moscow" },
+  { lon: 55.3, lat: 25.2, label: "Dubai" },
+  { lon: 73, lat: 19, label: "Mumbai" },
+  { lon: 100.5, lat: 13.8, label: "Bangkok" },
+  { lon: 121.5, lat: 31.2, label: "Shanghai" },
+  { lon: 139.7, lat: 35.7, label: "Tokyo" },
+  { lon: 151, lat: -33.9, label: "Sydney" },
+  { lon: 76.9, lat: 43.2, label: "Almaty" },
 ];
 
-const CONNECTIONS = [
-  [0, 5], [0, 1], [1, 9], [9, 2], [2, 3],
-  [3, 11], [11, 4], [4, 8], [5, 6],
-  [7, 9], [8, 10], [7, 0],
+const ARCS = [
+  [0,2],[2,3],[3,4],[4,6],[5,7],[7,8],[8,9],[9,10],[10,11],[11,12],[0,1],[6,13],[13,7],
 ];
 
-/* ─── Sphere math ─── */
-const CX = 200;
-const CY = 200;
-const RAD = 170;
-const ROTATION = -15; // degrees — rotates the globe to show Atlantic
+/* ─── Map projection: Mercator-like into SVG coords ─── */
+const VW = 800;
+const VH = 440;
+const PAD_X = 30;
+const PAD_Y = 30;
 
-function project(lon: number, lat: number) {
-  const lam = ((lon + ROTATION) * Math.PI) / 180;
-  const phi = (lat * Math.PI) / 180;
-  return {
-    x: CX + RAD * Math.cos(phi) * Math.sin(lam),
-    y: CY - RAD * Math.sin(phi),
-    z: Math.cos(phi) * Math.cos(lam), // >0 = visible
-  };
+function toSVG(lon: number, lat: number) {
+  const x = PAD_X + ((lon + 180) / 360) * (VW - PAD_X * 2);
+  // Clamp latitude for Mercator
+  const latR = Math.max(-70, Math.min(75, lat));
+  const y = PAD_Y + ((75 - latR) / 145) * (VH - PAD_Y * 2);
+  return { x, y };
 }
 
-function arcPath(a: { x: number; y: number }, b: { x: number; y: number }) {
+function makeArc(a: { x: number; y: number }, b: { x: number; y: number }) {
   const mx = (a.x + b.x) / 2;
   const my = (a.y + b.y) / 2;
   const d = Math.hypot(b.x - a.x, b.y - a.y);
-  const ang = Math.atan2(b.y - a.y, b.x - a.x) - Math.PI / 2;
-  return `M${a.x},${a.y} Q${mx + Math.cos(ang) * d * 0.3},${my + Math.sin(ang) * d * 0.3} ${b.x},${b.y}`;
+  const lift = Math.min(d * 0.25, 60);
+  return `M${a.x},${a.y} Q${mx},${my - lift} ${b.x},${b.y}`;
 }
 
 export default function AnimatedGlobe() {
@@ -153,8 +144,8 @@ export default function AnimatedGlobe() {
   const prefersReduced = useReducedMotion();
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  const rotX = useTransform(mouseY, [-400, 400], [4, -4]);
-  const rotY = useTransform(mouseX, [-400, 400], [-4, 4]);
+  const tx = useTransform(mouseX, [-400, 400], [-6, 6]);
+  const ty = useTransform(mouseY, [-400, 400], [-4, 4]);
 
   useEffect(() => {
     if (prefersReduced) return;
@@ -168,178 +159,122 @@ export default function AnimatedGlobe() {
     return () => window.removeEventListener("mousemove", onMove);
   }, [mouseX, mouseY, prefersReduced]);
 
-  /* Project all land dots */
-  const landProjected = useMemo(
-    () => LAND_DOTS.map(([lon, lat]) => project(lon, lat)),
-    []
-  );
-
-  /* Project city markers */
-  const cityProjected = useMemo(
-    () => CITIES.map((c) => ({ ...project(c.lon, c.lat), label: c.label })),
-    []
-  );
+  const landDots = useMemo(() => LAND.map(([lo, la]) => toSVG(lo, la)), []);
+  const cityDots = useMemo(() => CITIES.map((c) => ({ ...toSVG(c.lon, c.lat), label: c.label })), []);
 
   return (
-    <div
-      ref={containerRef}
-      className="relative w-full h-full flex items-center justify-center"
-    >
-      {/* Atmosphere glow */}
+    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
+      {/* Glow behind map */}
       <div
-        className="absolute rounded-full"
+        className="absolute w-[90%] h-[80%] rounded-full opacity-40 pointer-events-none"
         style={{
-          width: "105%",
-          height: "105%",
-          background:
-            "radial-gradient(circle, rgba(40,117,255,0.14) 0%, rgba(0,89,249,0.06) 40%, transparent 65%)",
-          filter: "blur(40px)",
+          background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(40,117,255,0.10), transparent 70%)",
+          filter: "blur(50px)",
         }}
       />
 
       <motion.div
-        style={
-          prefersReduced ? {} : { rotateX: rotX, rotateY: rotY, transformPerspective: 1000 }
-        }
-        className="relative w-full max-w-[440px] aspect-square"
+        style={prefersReduced ? {} : { x: tx, y: ty }}
+        className="relative w-full"
       >
-        <svg viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
+        <svg viewBox={`0 0 ${VW} ${VH}`} fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
           <defs>
-            {/* Planet shading — lit from top-left */}
-            <radialGradient id="planetShade" cx="38%" cy="32%" r="65%">
-              <stop offset="0%" stopColor="rgba(255,255,255,0.06)" />
-              <stop offset="50%" stopColor="rgba(40,117,255,0.03)" />
-              <stop offset="100%" stopColor="rgba(0,20,60,0.12)" />
-            </radialGradient>
-            {/* Atmosphere rim */}
-            <radialGradient id="atmosphere" cx="50%" cy="50%" r="50%">
-              <stop offset="80%" stopColor="transparent" />
-              <stop offset="92%" stopColor="rgba(40,117,255,0.10)" />
-              <stop offset="100%" stopColor="rgba(40,117,255,0.04)" />
-            </radialGradient>
-            {/* Ocean base */}
-            <radialGradient id="ocean" cx="42%" cy="36%" r="60%">
-              <stop offset="0%" stopColor="#f0f5ff" />
-              <stop offset="100%" stopColor="#e8eef8" />
-            </radialGradient>
-            <linearGradient id="arcGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#2875FF" stopOpacity="0.15" />
-              <stop offset="50%" stopColor="#2875FF" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#0059F9" stopOpacity="0.15" />
+            <linearGradient id="arcG" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#2875FF" stopOpacity="0.1" />
+              <stop offset="50%" stopColor="#2875FF" stopOpacity="0.55" />
+              <stop offset="100%" stopColor="#0059F9" stopOpacity="0.1" />
             </linearGradient>
             <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="2.5" result="b" />
+              <feGaussianBlur stdDeviation="3" result="b" />
+              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
+            </filter>
+            <filter id="glowSm" x="-100%" y="-100%" width="300%" height="300%">
+              <feGaussianBlur stdDeviation="1.5" result="b" />
               <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
             </filter>
           </defs>
 
-          {/* Globe sphere */}
-          <motion.circle
-            cx={CX} cy={CY} r={RAD}
-            fill="url(#ocean)"
-            stroke="rgba(40,117,255,0.12)"
-            strokeWidth="1"
-            initial={prefersReduced ? {} : { scale: 0.85, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          />
-          {/* Shading overlay */}
-          <circle cx={CX} cy={CY} r={RAD} fill="url(#planetShade)" />
-
-          {/* ── Land mass dots ── */}
-          {landProjected.map((p, i) => {
-            if (p.z < 0.05) return null;
-            // Dots farther from center (edge of sphere) are fainter
-            const brightness = 0.25 + p.z * 0.75;
-            return (
-              <motion.circle
-                key={i}
-                cx={p.x}
-                cy={p.y}
-                r={1.6}
-                fill={`rgba(40,117,255,${(brightness * 0.55).toFixed(2)})`}
-                initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  duration: prefersReduced ? 0 : 0.25,
-                  delay: prefersReduced ? 0 : 0.3 + (i % 40) * 0.015,
-                }}
-              />
-            );
-          })}
-
-          {/* Atmosphere rim highlight */}
-          <circle cx={CX} cy={CY} r={RAD + 2} fill="none" stroke="rgba(40,117,255,0.08)" strokeWidth="4" />
-          <circle cx={CX} cy={CY} r={RAD} fill="url(#atmosphere)" />
+          {/* ── Land dots ── */}
+          {landDots.map((p, i) => (
+            <motion.circle
+              key={i}
+              cx={p.x}
+              cy={p.y}
+              r="2.2"
+              fill="rgba(40,117,255,0.22)"
+              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{
+                duration: prefersReduced ? 0 : 0.2,
+                delay: prefersReduced ? 0 : 0.1 + (i % 50) * 0.012,
+              }}
+            />
+          ))}
 
           {/* ── Connection arcs ── */}
-          {CONNECTIONS.map(([fi, ti], i) => {
-            const a = cityProjected[fi];
-            const b = cityProjected[ti];
-            if (a.z < 0 && b.z < 0) return null;
+          {ARCS.map(([fi, ti], i) => {
+            const a = cityDots[fi];
+            const b = cityDots[ti];
+            const d = makeArc(a, b);
             return (
               <motion.path
                 key={`arc-${i}`}
-                d={arcPath(a, b)}
-                stroke="url(#arcGrad)"
-                strokeWidth="1.2"
+                d={d}
+                stroke="url(#arcG)"
+                strokeWidth="1.5"
                 fill="none"
                 strokeLinecap="round"
                 initial={prefersReduced ? { pathLength: 1, opacity: 0.4 } : { pathLength: 0, opacity: 0 }}
                 animate={prefersReduced ? {} : { pathLength: 1, opacity: 0.5 }}
                 transition={{
-                  pathLength: { duration: 1.6, delay: 1 + i * 0.12, ease: "easeInOut" },
-                  opacity: { duration: 0.5, delay: 1 + i * 0.12 },
+                  pathLength: { duration: 1.6, delay: 0.8 + i * 0.1, ease: "easeInOut" },
+                  opacity: { duration: 0.4, delay: 0.8 + i * 0.1 },
                 }}
               />
             );
           })}
 
-          {/* ── City dots ── */}
-          {cityProjected.map((c, i) => {
-            if (c.z < 0) return null;
-            const op = 0.4 + c.z * 0.6;
-            return (
-              <g key={`city-${i}`}>
-                {/* Pulse */}
-                <motion.circle
-                  cx={c.x} cy={c.y} r="7"
-                  fill="none" stroke="#2875FF" strokeWidth="0.7"
-                  initial={prefersReduced ? { opacity: 0.15 } : { scale: 0.5, opacity: 0 }}
-                  animate={prefersReduced ? {} : { scale: [0.6, 2, 0.6], opacity: [0, 0.25 * op, 0] }}
-                  transition={{ duration: 3.5, delay: i * 0.3, repeat: Infinity, ease: "easeInOut" }}
-                />
-                {/* Dot */}
-                <motion.circle
-                  cx={c.x} cy={c.y} r="3"
-                  fill="#2875FF" filter="url(#glow)"
-                  initial={prefersReduced ? { opacity: op } : { scale: 0, opacity: 0 }}
-                  animate={prefersReduced ? {} : { scale: 1, opacity: op }}
-                  transition={{ duration: 0.5, delay: 0.8 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                />
-                {/* Core */}
-                <motion.circle
-                  cx={c.x} cy={c.y} r="1.2"
-                  fill="white"
-                  initial={prefersReduced ? { opacity: op * 0.9 } : { scale: 0, opacity: 0 }}
-                  animate={prefersReduced ? {} : { scale: 1, opacity: op * 0.9 }}
-                  transition={{ duration: 0.4, delay: 0.9 + i * 0.07, ease: [0.16, 1, 0.3, 1] }}
-                />
-              </g>
-            );
-          })}
+          {/* ── City markers ── */}
+          {cityDots.map((c, i) => (
+            <g key={`city-${i}`}>
+              {/* Pulse ring */}
+              <motion.circle
+                cx={c.x} cy={c.y} r="10"
+                fill="none" stroke="#2875FF" strokeWidth="0.7"
+                initial={prefersReduced ? { opacity: 0.15 } : { scale: 0.5, opacity: 0 }}
+                animate={prefersReduced ? {} : { scale: [0.5, 2.2, 0.5], opacity: [0, 0.2, 0] }}
+                transition={{ duration: 4, delay: i * 0.3, repeat: Infinity, ease: "easeInOut" }}
+              />
+              {/* Glow dot */}
+              <motion.circle
+                cx={c.x} cy={c.y} r="4"
+                fill="#2875FF" filter="url(#glow)"
+                initial={prefersReduced ? { opacity: 0.8 } : { scale: 0, opacity: 0 }}
+                animate={prefersReduced ? {} : { scale: 1, opacity: 0.85 }}
+                transition={{ duration: 0.5, delay: 0.6 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              />
+              {/* White core */}
+              <motion.circle
+                cx={c.x} cy={c.y} r="1.5"
+                fill="white"
+                initial={prefersReduced ? { opacity: 0.9 } : { scale: 0, opacity: 0 }}
+                animate={prefersReduced ? {} : { scale: 1, opacity: 0.9 }}
+                transition={{ duration: 0.4, delay: 0.7 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+              />
+            </g>
+          ))}
 
-          {/* ── Traveling data packets ── */}
+          {/* ── Data packets traveling along arcs ── */}
           {!prefersReduced &&
-            [0, 2, 4, 8].map((ci, i) => {
-              const [fi, ti] = CONNECTIONS[ci];
-              const a = cityProjected[fi];
-              const b = cityProjected[ti];
-              if (a.z < 0 && b.z < 0) return null;
+            [0, 3, 5, 8, 10].map((ci, i) => {
+              const [fi, ti] = ARCS[ci];
+              const a = cityDots[fi];
+              const b = cityDots[ti];
+              const d = makeArc(a, b);
               return (
-                <circle key={`pkt-${i}`} r="1.8" fill="#2875FF" filter="url(#glow)" opacity="0">
-                  <animate attributeName="opacity" values="0;0.9;0.9;0" dur="2.5s" begin={`${2.5 + i * 1.5}s`} repeatCount="indefinite" />
-                  <animateMotion dur="2.5s" begin={`${2.5 + i * 1.5}s`} repeatCount="indefinite" path={arcPath(a, b)} />
+                <circle key={`pkt-${i}`} r="2.2" fill="#2875FF" filter="url(#glowSm)" opacity="0">
+                  <animate attributeName="opacity" values="0;0.85;0.85;0" dur="2.5s" begin={`${2 + i * 1.3}s`} repeatCount="indefinite" />
+                  <animateMotion dur="2.5s" begin={`${2 + i * 1.3}s`} repeatCount="indefinite" path={d} />
                 </circle>
               );
             })}
