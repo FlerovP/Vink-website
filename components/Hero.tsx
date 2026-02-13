@@ -12,7 +12,7 @@ export default function Hero() {
   return (
     <section
       id="product"
-      className="relative min-h-screen flex items-center overflow-hidden pt-16 lg:pt-20"
+      className="relative min-h-screen flex items-center overflow-hidden pt-4 lg:pt-20"
     >
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
@@ -23,7 +23,7 @@ export default function Hero() {
               initial={prefersReduced ? {} : { opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="block lg:hidden relative h-[260px] sm:h-[320px] mx-auto w-full max-w-[320px] -mb-2"
+              className="block lg:hidden relative h-[200px] sm:h-[280px] mx-auto w-full max-w-[320px] -mb-4"
             >
               <AnimatedGlobe />
             </motion.div>
