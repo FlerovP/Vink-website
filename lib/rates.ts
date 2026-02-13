@@ -243,7 +243,7 @@ export async function fetchRates(): Promise<CountryRate[]> {
       rates.push({
         country,
         flag: FLAGS[country] || "🏳️",
-        pricePerGB: Math.round(minRate * 1000 * 100) / 100, // per GB, 2 decimals
+        pricePerGB: Math.round(minRate * 1024 * 100) / 100, // per GB, 2 decimals
         operatorCount: count,
       });
     }
