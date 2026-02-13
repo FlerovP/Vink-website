@@ -41,7 +41,7 @@ export default async function Home({
         <Hero />
         <USPGrid />
         <HowItWorks />
-        <CoverageMap />
+        <CoverageMap rates={allRates} />
         <Rates rates={topRates} />
         <DownloadCTA />
         <FAQ />
