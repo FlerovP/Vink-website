@@ -123,12 +123,12 @@ export default function Hero() {
             </motion.div>
           </div>
 
-          {/* Animated Map — hidden on mobile */}
+          {/* Rotating Globe — hidden on mobile */}
           <motion.div
             initial={prefersReduced ? {} : { opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 1, delay: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="hidden lg:block relative h-[440px] lg:-mr-8"
+            className="hidden lg:block relative h-[480px] lg:-mr-4"
           >
             <AnimatedGlobe />
           </motion.div>

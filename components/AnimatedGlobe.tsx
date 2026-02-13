@@ -1,10 +1,6 @@
 "use client";
 
-import { useRef, useMemo } from "react";
-import {
-  motion,
-  useReducedMotion,
-} from "framer-motion";
+import { useEffect, useRef, useCallback } from "react";
 
 /* ─── Land dots [lon, lat] on ~6° grid ─── */
 const LAND: [number, number][] = [
@@ -93,201 +89,329 @@ const LAND: [number, number][] = [
   [172,-38],[172,-44],
 ];
 
-/* ─── City markers ─── */
+/* ─── Cities ─── */
 const CITIES = [
-  { lon: -74, lat: 40.7, label: "New York" },       // 0
-  { lon: -43, lat: -23, label: "São Paulo" },        // 1
-  { lon: -0.1, lat: 51.5, label: "London" },         // 2
-  { lon: 2.4, lat: 48.9, label: "Paris" },           // 3
-  { lon: 13, lat: 52.5, label: "Berlin" },           // 4
-  { lon: 29, lat: 41, label: "Istanbul" },           // 5
-  { lon: 37.6, lat: 55.8, label: "Moscow" },         // 6
-  { lon: 55.3, lat: 25.2, label: "Dubai" },          // 7
-  { lon: 73, lat: 19, label: "Mumbai" },             // 8
-  { lon: 100.5, lat: 13.8, label: "Bangkok" },       // 9
-  { lon: 121.5, lat: 31.2, label: "Shanghai" },      // 10
-  { lon: 139.7, lat: 35.7, label: "Tokyo" },         // 11
-  { lon: 151, lat: -33.9, label: "Sydney" },         // 12
-  { lon: 76.9, lat: 43.2, label: "Almaty" },         // 13
-  { lon: -118, lat: 34, label: "Los Angeles" },      // 14
-  { lon: -80, lat: 25.8, label: "Miami" },           // 15
-  { lon: -99, lat: 19.4, label: "Mexico City" },     // 16
-  { lon: -3.7, lat: 40.4, label: "Madrid" },         // 17
-  { lon: 12.5, lat: 41.9, label: "Rome" },           // 18
-  { lon: 24, lat: 60.2, label: "Helsinki" },         // 19
-  { lon: 32.9, lat: 39.9, label: "Ankara" },         // 20
-  { lon: 46.7, lat: 24.7, label: "Riyadh" },        // 21
-  { lon: 36.8, lat: -1.3, label: "Nairobi" },       // 22
-  { lon: 3.4, lat: 6.5, label: "Lagos" },           // 23
-  { lon: 28, lat: -26, label: "Johannesburg" },      // 24
-  { lon: 90.4, lat: 23.8, label: "Dhaka" },         // 25
-  { lon: 103.8, lat: 1.35, label: "Singapore" },     // 26
-  { lon: 106.8, lat: -6.2, label: "Jakarta" },       // 27
-  { lon: 114.2, lat: 22.3, label: "Hong Kong" },     // 28
-  { lon: 127, lat: 37.6, label: "Seoul" },           // 29
+  { lon: -74, lat: 40.7 },   // New York
+  { lon: -43, lat: -23 },    // São Paulo
+  { lon: -0.1, lat: 51.5 },  // London
+  { lon: 13, lat: 52.5 },    // Berlin
+  { lon: 37.6, lat: 55.8 },  // Moscow
+  { lon: 55.3, lat: 25.2 },  // Dubai
+  { lon: 100.5, lat: 13.8 }, // Bangkok
+  { lon: 121.5, lat: 31.2 }, // Shanghai
+  { lon: 139.7, lat: 35.7 }, // Tokyo
+  { lon: 151, lat: -33.9 },  // Sydney
+  { lon: -118, lat: 34 },    // Los Angeles
+  { lon: -99, lat: 19.4 },   // Mexico City
+  { lon: 28, lat: -26 },     // Johannesburg
+  { lon: 103.8, lat: 1.35 }, // Singapore
 ];
 
-const ARCS = [
-  // Transatlantic
-  [0,2],[0,15],[14,0],[14,11],[15,1],[0,1],[16,15],
-  // Europe internal
-  [2,3],[3,4],[3,17],[17,18],[4,19],[18,5],[4,6],[2,6],[19,6],
-  // Europe → Middle East / Africa
-  [5,7],[5,20],[20,7],[7,21],[21,22],[23,22],[23,24],[22,24],[2,23],
-  // Middle East → Asia
-  [7,8],[7,13],[13,6],[8,25],[25,9],[8,9],
-  // Asia internal
-  [9,26],[26,27],[9,28],[28,10],[10,11],[11,29],[29,10],[28,11],
-  // Asia → Oceania
-  [26,12],[27,12],[11,12],
-  // Long-haul
-  [0,11],[2,8],[14,10],[1,23],[6,10],
+const ARCS: [number, number][] = [
+  [0,2],[0,10],[10,8],[2,3],[3,4],[4,5],[5,6],[6,13],[7,8],[8,9],[11,0],[1,12],[2,12],[5,7],[0,1],[10,9],[3,5],[6,7],[13,9],[12,9],
 ];
 
-/* ─── Map projection: Mercator-like into SVG coords ─── */
-const VW = 800;
-const VH = 440;
-const PAD_X = 30;
-const PAD_Y = 30;
+const DEG = Math.PI / 180;
 
-function toSVG(lon: number, lat: number) {
-  const x = PAD_X + ((lon + 180) / 360) * (VW - PAD_X * 2);
-  // Clamp latitude for Mercator
-  const latR = Math.max(-70, Math.min(75, lat));
-  const y = PAD_Y + ((75 - latR) / 145) * (VH - PAD_Y * 2);
-  return { x, y };
+/* ── Convert lat/lon to 3D point on unit sphere ── */
+function latLonTo3D(lon: number, lat: number) {
+  const phi = lat * DEG;
+  const theta = lon * DEG;
+  return {
+    x: Math.cos(phi) * Math.sin(theta),
+    y: -Math.sin(phi),
+    z: Math.cos(phi) * Math.cos(theta),
+  };
 }
 
-function makeArc(a: { x: number; y: number }, b: { x: number; y: number }) {
-  const mx = (a.x + b.x) / 2;
-  const my = (a.y + b.y) / 2;
-  const d = Math.hypot(b.x - a.x, b.y - a.y);
-  const lift = Math.min(d * 0.25, 60);
-  return `M${a.x},${a.y} Q${mx},${my - lift} ${b.x},${b.y}`;
+/* ── Rotate around Y axis ── */
+function rotateY(p: { x: number; y: number; z: number }, angle: number) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return {
+    x: p.x * cos + p.z * sin,
+    y: p.y,
+    z: -p.x * sin + p.z * cos,
+  };
 }
+
+/* ── Slight tilt around X axis ── */
+function rotateX(p: { x: number; y: number; z: number }, angle: number) {
+  const cos = Math.cos(angle);
+  const sin = Math.sin(angle);
+  return {
+    x: p.x,
+    y: p.y * cos - p.z * sin,
+    z: p.y * sin + p.z * cos,
+  };
+}
+
+/* ── Project 3D → 2D ── */
+function project(
+  p: { x: number; y: number; z: number },
+  cx: number,
+  cy: number,
+  radius: number,
+) {
+  return {
+    x: cx + p.x * radius,
+    y: cy + p.y * radius,
+    z: p.z,
+  };
+}
+
+/* ── Precompute 3D coords ── */
+const LAND_3D = LAND.map(([lo, la]) => latLonTo3D(lo, la));
+const CITY_3D = CITIES.map((c) => latLonTo3D(c.lon, c.lat));
+
+/* ── Grid ring latitudes for wireframe effect ── */
+const GRID_LATS = [-60, -30, 0, 30, 60];
+const GRID_LONS = [-150, -120, -90, -60, -30, 0, 30, 60, 90, 120, 150, 180];
 
 export default function AnimatedGlobe() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const prefersReduced = useReducedMotion();
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const rafRef = useRef<number>(0);
+  const angleRef = useRef(0);
 
-  const landDots = useMemo(() => LAND.map(([lo, la]) => toSVG(lo, la)), []);
-  const cityDots = useMemo(() => CITIES.map((c) => ({ ...toSVG(c.lon, c.lat), label: c.label })), []);
+  const draw = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width;
+    const h = rect.height;
+
+    if (canvas.width !== w * dpr || canvas.height !== h * dpr) {
+      canvas.width = w * dpr;
+      canvas.height = h * dpr;
+      ctx.scale(dpr, dpr);
+    }
+
+    ctx.clearRect(0, 0, w, h);
+
+    const cx = w / 2;
+    const cy = h / 2;
+    const radius = Math.min(w, h) * 0.42;
+    const rot = angleRef.current;
+    const tilt = -0.18; // slight tilt
+
+    /* ── Atmosphere glow ── */
+    const atmosGrad = ctx.createRadialGradient(cx, cy, radius * 0.85, cx, cy, radius * 1.25);
+    atmosGrad.addColorStop(0, "rgba(40,117,255,0)");
+    atmosGrad.addColorStop(0.5, "rgba(40,117,255,0.06)");
+    atmosGrad.addColorStop(1, "rgba(40,117,255,0)");
+    ctx.fillStyle = atmosGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius * 1.25, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* ── Globe base circle ── */
+    const baseGrad = ctx.createRadialGradient(cx - radius * 0.2, cy - radius * 0.2, 0, cx, cy, radius);
+    baseGrad.addColorStop(0, "rgba(40,117,255,0.04)");
+    baseGrad.addColorStop(0.7, "rgba(40,117,255,0.02)");
+    baseGrad.addColorStop(1, "rgba(40,117,255,0.06)");
+    ctx.fillStyle = baseGrad;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+
+    /* ── Globe outline ── */
+    ctx.strokeStyle = "rgba(40,117,255,0.12)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    /* ── Grid lines (subtle) ── */
+    ctx.strokeStyle = "rgba(40,117,255,0.05)";
+    ctx.lineWidth = 0.5;
+
+    // Latitude rings
+    for (const lat of GRID_LATS) {
+      ctx.beginPath();
+      let started = false;
+      for (let lon = -180; lon <= 180; lon += 3) {
+        const p3 = latLonTo3D(lon, lat);
+        const pr = rotateX(rotateY(p3, rot), tilt);
+        const pp = project(pr, cx, cy, radius);
+        if (pr.z > -0.1) {
+          const alpha = Math.max(0, pr.z) * 0.8;
+          if (!started) {
+            ctx.moveTo(pp.x, pp.y);
+            started = true;
+          } else {
+            ctx.globalAlpha = alpha;
+            ctx.lineTo(pp.x, pp.y);
+          }
+        } else {
+          started = false;
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.stroke();
+    }
+
+    // Longitude meridians
+    for (const lon of GRID_LONS) {
+      ctx.beginPath();
+      let started = false;
+      for (let lat = -90; lat <= 90; lat += 3) {
+        const p3 = latLonTo3D(lon, lat);
+        const pr = rotateX(rotateY(p3, rot), tilt);
+        const pp = project(pr, cx, cy, radius);
+        if (pr.z > -0.1) {
+          const alpha = Math.max(0, pr.z) * 0.8;
+          if (!started) {
+            ctx.moveTo(pp.x, pp.y);
+            started = true;
+          } else {
+            ctx.globalAlpha = alpha;
+            ctx.lineTo(pp.x, pp.y);
+          }
+        } else {
+          started = false;
+        }
+      }
+      ctx.globalAlpha = 1;
+      ctx.stroke();
+    }
+
+    /* ── Land dots ── */
+    for (const p3 of LAND_3D) {
+      const pr = rotateX(rotateY(p3, rot), tilt);
+      if (pr.z < 0) continue; // back side hidden
+      const pp = project(pr, cx, cy, radius);
+      const alpha = pr.z * 0.6 + 0.15;
+      const dotR = 1.2 + pr.z * 0.8;
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "#2875FF";
+      ctx.beginPath();
+      ctx.arc(pp.x, pp.y, dotR, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    /* ── Connection arcs ── */
+    for (const [ai, bi] of ARCS) {
+      const a3 = CITY_3D[ai];
+      const b3 = CITY_3D[bi];
+      const ar = rotateX(rotateY(a3, rot), tilt);
+      const br = rotateX(rotateY(b3, rot), tilt);
+      // Only draw if at least one endpoint visible
+      if (ar.z < 0.1 && br.z < 0.1) continue;
+      const ap = project(ar, cx, cy, radius);
+      const bp = project(br, cx, cy, radius);
+      // Midpoint lifted outward for arc effect
+      const mid3 = {
+        x: (a3.x + b3.x) / 2,
+        y: (a3.y + b3.y) / 2,
+        z: (a3.z + b3.z) / 2,
+      };
+      const midLen = Math.sqrt(mid3.x ** 2 + mid3.y ** 2 + mid3.z ** 2);
+      const lift = 1.15 + Math.hypot(ap.x - bp.x, ap.y - bp.y) / radius * 0.15;
+      const midLifted = {
+        x: (mid3.x / midLen) * lift,
+        y: (mid3.y / midLen) * lift,
+        z: (mid3.z / midLen) * lift,
+      };
+      const mr = rotateX(rotateY(midLifted, rot), tilt);
+      const mp = project(mr, cx, cy, radius);
+
+      const arcAlpha = Math.min(ar.z, br.z) * 0.5 + 0.1;
+      ctx.globalAlpha = Math.max(0, arcAlpha);
+      ctx.strokeStyle = "#2875FF";
+      ctx.lineWidth = 0.8;
+      ctx.beginPath();
+      ctx.moveTo(ap.x, ap.y);
+      ctx.quadraticCurveTo(mp.x, mp.y, bp.x, bp.y);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    /* ── City markers ── */
+    for (const c3 of CITY_3D) {
+      const cr = rotateX(rotateY(c3, rot), tilt);
+      if (cr.z < 0.05) continue;
+      const cp = project(cr, cx, cy, radius);
+      const alpha = cr.z;
+
+      // Outer glow
+      ctx.globalAlpha = alpha * 0.3;
+      const glow = ctx.createRadialGradient(cp.x, cp.y, 0, cp.x, cp.y, 8);
+      glow.addColorStop(0, "rgba(40,117,255,0.6)");
+      glow.addColorStop(1, "rgba(40,117,255,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(cp.x, cp.y, 8, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Blue dot
+      ctx.globalAlpha = alpha * 0.9;
+      ctx.fillStyle = "#2875FF";
+      ctx.beginPath();
+      ctx.arc(cp.x, cp.y, 2.5, 0, Math.PI * 2);
+      ctx.fill();
+
+      // White core
+      ctx.globalAlpha = alpha * 0.95;
+      ctx.fillStyle = "#ffffff";
+      ctx.beginPath();
+      ctx.arc(cp.x, cp.y, 1, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+
+    /* ── Animated pulse rings on cities ── */
+    const time = Date.now() * 0.001;
+    for (let i = 0; i < CITY_3D.length; i++) {
+      const c3 = CITY_3D[i];
+      const cr = rotateX(rotateY(c3, rot), tilt);
+      if (cr.z < 0.1) continue;
+      const cp = project(cr, cx, cy, radius);
+      const pulse = ((time + i * 1.7) % 3) / 3; // 0..1 over 3 seconds
+      const pulseR = 3 + pulse * 14;
+      const pulseAlpha = (1 - pulse) * 0.25 * cr.z;
+      ctx.globalAlpha = pulseAlpha;
+      ctx.strokeStyle = "#2875FF";
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.arc(cp.x, cp.y, pulseR, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.globalAlpha = 1;
+
+    // Advance rotation
+    const prefersReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (!prefersReduced) {
+      angleRef.current += 0.003;
+    }
+
+    rafRef.current = requestAnimationFrame(draw);
+  }, []);
+
+  useEffect(() => {
+    rafRef.current = requestAnimationFrame(draw);
+    return () => cancelAnimationFrame(rafRef.current);
+  }, [draw]);
 
   return (
-    <div ref={containerRef} className="relative w-full h-full flex items-center justify-center">
-      {/* Glow behind map */}
+    <div className="relative w-full h-full flex items-center justify-center">
+      {/* Soft glow behind globe */}
       <div
-        className="absolute w-[90%] h-[80%] rounded-full opacity-40 pointer-events-none"
+        className="absolute w-[80%] h-[80%] rounded-full pointer-events-none"
         style={{
-          background: "radial-gradient(ellipse 70% 60% at 50% 50%, rgba(40,117,255,0.10), transparent 70%)",
-          filter: "blur(50px)",
+          background: "radial-gradient(circle at 50% 50%, rgba(40,117,255,0.08), transparent 70%)",
+          filter: "blur(40px)",
         }}
       />
-
-      <div className="relative w-full">
-        <svg viewBox={`0 0 ${VW} ${VH}`} fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-auto">
-          <defs>
-            <linearGradient id="arcG" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#2875FF" stopOpacity="0.1" />
-              <stop offset="50%" stopColor="#2875FF" stopOpacity="0.55" />
-              <stop offset="100%" stopColor="#0059F9" stopOpacity="0.1" />
-            </linearGradient>
-            <filter id="glow" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="3" result="b" />
-              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-            <filter id="glowSm" x="-100%" y="-100%" width="300%" height="300%">
-              <feGaussianBlur stdDeviation="1.5" result="b" />
-              <feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge>
-            </filter>
-          </defs>
-
-          {/* ── Land dots ── */}
-          {landDots.map((p, i) => (
-            <motion.circle
-              key={i}
-              cx={p.x}
-              cy={p.y}
-              r="2.2"
-              fill="rgba(40,117,255,0.22)"
-              initial={prefersReduced ? { opacity: 1 } : { opacity: 0, scale: 0 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{
-                duration: prefersReduced ? 0 : 0.2,
-                delay: prefersReduced ? 0 : 0.1 + (i % 50) * 0.012,
-              }}
-            />
-          ))}
-
-          {/* ── Connection arcs ── */}
-          {ARCS.map(([fi, ti], i) => {
-            const a = cityDots[fi];
-            const b = cityDots[ti];
-            const d = makeArc(a, b);
-            return (
-              <motion.path
-                key={`arc-${i}`}
-                d={d}
-                stroke="url(#arcG)"
-                strokeWidth="1.5"
-                fill="none"
-                strokeLinecap="round"
-                initial={prefersReduced ? { pathLength: 1, opacity: 0.4 } : { pathLength: 0, opacity: 0 }}
-                animate={prefersReduced ? {} : { pathLength: 1, opacity: 0.5 }}
-                transition={{
-                  pathLength: { duration: 1.6, delay: 0.8 + i * 0.1, ease: "easeInOut" },
-                  opacity: { duration: 0.4, delay: 0.8 + i * 0.1 },
-                }}
-              />
-            );
-          })}
-
-          {/* ── City markers ── */}
-          {cityDots.map((c, i) => (
-            <g key={`city-${i}`}>
-              {/* Pulse ring */}
-              <motion.circle
-                cx={c.x} cy={c.y} r="10"
-                fill="none" stroke="#2875FF" strokeWidth="0.7"
-                initial={prefersReduced ? { opacity: 0.15 } : { scale: 0.5, opacity: 0 }}
-                animate={prefersReduced ? {} : { scale: [0.5, 2.2, 0.5], opacity: [0, 0.2, 0] }}
-                transition={{ duration: 4, delay: i * 0.3, repeat: Infinity, ease: "easeInOut" }}
-              />
-              {/* Glow dot */}
-              <motion.circle
-                cx={c.x} cy={c.y} r="4"
-                fill="#2875FF" filter="url(#glow)"
-                initial={prefersReduced ? { opacity: 0.8 } : { scale: 0, opacity: 0 }}
-                animate={prefersReduced ? {} : { scale: 1, opacity: 0.85 }}
-                transition={{ duration: 0.5, delay: 0.6 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              />
-              {/* White core */}
-              <motion.circle
-                cx={c.x} cy={c.y} r="1.5"
-                fill="white"
-                initial={prefersReduced ? { opacity: 0.9 } : { scale: 0, opacity: 0 }}
-                animate={prefersReduced ? {} : { scale: 1, opacity: 0.9 }}
-                transition={{ duration: 0.4, delay: 0.7 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-              />
-            </g>
-          ))}
-
-          {/* ── Data packets traveling along arcs ── */}
-          {!prefersReduced &&
-            [0, 7, 12, 18, 24, 30, 35, 38].map((ci, i) => {
-              const [fi, ti] = ARCS[ci];
-              const a = cityDots[fi];
-              const b = cityDots[ti];
-              const d = makeArc(a, b);
-              return (
-                <circle key={`pkt-${i}`} r="2.2" fill="#2875FF" filter="url(#glowSm)" opacity="0">
-                  <animate attributeName="opacity" values="0;0.85;0.85;0" dur="2.5s" begin={`${2 + i * 1.3}s`} repeatCount="indefinite" />
-                  <animateMotion dur="2.5s" begin={`${2 + i * 1.3}s`} repeatCount="indefinite" path={d} />
-                </circle>
-              );
-            })}
-        </svg>
-      </div>
+      <canvas
+        ref={canvasRef}
+        className="relative w-full h-full"
+        style={{ aspectRatio: "1 / 1" }}
+      />
     </div>
   );
 }
