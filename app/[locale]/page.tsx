@@ -8,6 +8,7 @@ import Rates from "@/components/Rates";
 import DownloadCTA from "@/components/DownloadCTA";
 import FAQ from "@/components/FAQ";
 import Footer from "@/components/Footer";
+import TrustpilotBanner from "@/components/TrustpilotBanner";
 import GlowOrbs from "@/components/GlowOrbs";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import { fetchRates, getTopRates } from "@/lib/rates";
@@ -44,6 +45,9 @@ export default async function Home({
         <Rates rates={topRates} />
         <DownloadCTA />
         <FAQ />
+        <div className="max-w-md mx-auto px-4 py-8">
+          <TrustpilotBanner />
+        </div>
       </main>
 
       {/* Footer */}
