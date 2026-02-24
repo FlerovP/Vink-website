@@ -15,6 +15,7 @@ export const siteConfig = {
   footerLinks: [
     { href: "/privacy" },
     { href: "/terms" },
+    { href: "/offer" },
     { href: "mailto:support@vinksim.com" },
   ],
 };

@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 import { Link } from "@/i18n/navigation";
 
-const FOOTER_LINK_KEYS = ["privacyPolicy", "termsOfService", "support"] as const;
+const FOOTER_LINK_KEYS = ["privacyPolicy", "termsOfService", "publicOffer", "support"] as const;
 
 export default function Footer() {
   const t = useTranslations("footer");
