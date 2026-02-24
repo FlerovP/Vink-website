@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslations } from "next-intl";
 import { siteConfig } from "@/config/site";
 import type { CountryRate } from "@/lib/rates";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 interface CountryPopupProps {
   rate: CountryRate | null;
@@ -13,6 +14,7 @@ interface CountryPopupProps {
 
 export default function CountryPopup({ rate, onClose }: CountryPopupProps) {
   const t = useTranslations("popup");
+  const { format } = useCurrency();
 
   // Close on Escape
   const handleKey = useCallback(
@@ -84,7 +86,7 @@ export default function CountryPopup({ rate, onClose }: CountryPopupProps) {
               <p className="text-gray-500 text-sm mt-1">
                 {t("from")}{" "}
                 <span className="font-semibold text-gray-800">
-                  ${rate.pricePerGB.toFixed(2)}
+                  {format(rate.pricePerGB)}
                 </span>
                 <span className="text-gray-400"> {t("perGb")}</span>
               </p>

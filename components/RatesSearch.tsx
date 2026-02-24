@@ -5,6 +5,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { CountryRate } from "@/lib/rates";
 import CountryPopup from "@/components/CountryPopup";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 const containerVariants = {
   hidden: {},
@@ -42,6 +43,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
   const [selectedRate, setSelectedRate] = useState<CountryRate | null>(null);
   const prefersReduced = useReducedMotion();
   const t = useTranslations("ratesPage");
+  const { format } = useCurrency();
 
   const filtered = useMemo(() => {
     if (!query.trim()) return rates;
@@ -121,8 +123,7 @@ export default function RatesSearch({ rates }: RatesSearchProps) {
                     {rate.country}
                   </h3>
                   <p className="text-lg sm:text-xl font-bold text-gray-900 mt-0.5">
-                    <span className="text-xs sm:text-sm font-normal text-gray-400 mr-0.5">$</span>
-                    {rate.pricePerGB.toFixed(2)}
+                    {format(rate.pricePerGB)}
                     <span className="text-[10px] sm:text-xs font-normal text-gray-400 ml-1">/GB</span>
                   </p>
                 </div>

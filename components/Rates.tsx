@@ -6,6 +6,8 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { CountryRate } from "@/lib/rates";
 import CountryPopup from "@/components/CountryPopup";
+import CurrencySelector from "@/components/CurrencySelector";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 const containerVariants = {
   hidden: {},
@@ -42,6 +44,7 @@ export default function Rates({ rates }: RatesProps) {
   const prefersReduced = useReducedMotion();
   const [selectedRate, setSelectedRate] = useState<CountryRate | null>(null);
   const t = useTranslations("rates");
+  const { format } = useCurrency();
 
   return (
     <section id="rates" className="section-padding relative z-10">
@@ -79,18 +82,15 @@ export default function Rates({ rates }: RatesProps) {
             {t("description")}
           </motion.p>
 
-          {/* Price badge */}
+          {/* Currency selector */}
           <motion.div
             initial={prefersReduced ? {} : { opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.4, delay: 0.3 }}
-            className="inline-flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-cyan/10 text-cyan text-sm font-semibold"
+            className="mt-6"
           >
-            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
-            {t("priceBadge")}
+            <CurrencySelector />
           </motion.div>
         </div>
 
@@ -121,8 +121,7 @@ export default function Rates({ rates }: RatesProps) {
                     {rate.country}
                   </h3>
                   <p className="text-xl font-bold text-gray-900 mt-0.5">
-                    <span className="text-sm font-normal text-gray-400 mr-0.5">$</span>
-                    {rate.pricePerGB.toFixed(2)}
+                    {format(rate.pricePerGB)}
                     <span className="text-xs font-normal text-gray-400 ml-1">{t("perGb")}</span>
                   </p>
                 </div>

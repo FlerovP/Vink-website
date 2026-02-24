@@ -12,6 +12,8 @@ import TrustpilotBanner from "@/components/TrustpilotBanner";
 import GlowOrbs from "@/components/GlowOrbs";
 import NoiseOverlay from "@/components/NoiseOverlay";
 import { fetchRates, getTopRates } from "@/lib/rates";
+import { fetchExchangeRates } from "@/lib/currency";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 
 export const revalidate = 60;
 
@@ -23,11 +25,14 @@ export default async function Home({
   const { locale } = await params;
   setRequestLocale(locale);
 
-  const allRates = await fetchRates();
+  const [allRates, exchangeRates] = await Promise.all([
+    fetchRates(),
+    fetchExchangeRates(),
+  ]);
   const topRates = getTopRates(allRates, 8);
 
   return (
-    <>
+    <CurrencyProvider exchangeRates={exchangeRates}>
       {/* Background layers */}
       <div className="animated-gradient-bg" aria-hidden="true" />
       <GlowOrbs />
@@ -52,6 +57,6 @@ export default async function Home({
 
       {/* Footer */}
       <Footer />
-    </>
+    </CurrencyProvider>
   );
 }

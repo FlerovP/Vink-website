@@ -1,7 +1,10 @@
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import Link from "next/link";
 import { fetchRates } from "@/lib/rates";
+import { fetchExchangeRates } from "@/lib/currency";
+import { CurrencyProvider } from "@/components/CurrencyProvider";
 import RatesSearch from "@/components/RatesSearch";
+import CurrencySelector from "@/components/CurrencySelector";
 import GlowOrbs from "@/components/GlowOrbs";
 import NoiseOverlay from "@/components/NoiseOverlay";
 
@@ -29,10 +32,13 @@ export default async function AllRatesPage({
   setRequestLocale(locale);
 
   const t = await getTranslations("ratesPage");
-  const rates = await fetchRates();
+  const [rates, exchangeRates] = await Promise.all([
+    fetchRates(),
+    fetchExchangeRates(),
+  ]);
 
   return (
-    <>
+    <CurrencyProvider exchangeRates={exchangeRates}>
       {/* Background layers */}
       <div className="animated-gradient-bg" aria-hidden="true" />
       <GlowOrbs />
@@ -70,17 +76,11 @@ export default async function AllRatesPage({
                 {t("headingHighlight", { count: rates.length })}
               </span>
             </h1>
-            <p className="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 text-base sm:text-lg max-w-2xl mx-auto mb-6">
               {t("subtitle")}
             </p>
 
-            {/* Price badge */}
-            <div className="inline-flex items-center gap-2 mt-6 px-4 py-2 rounded-full bg-cyan/10 text-cyan text-sm font-semibold">
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v12m-3-2.818l.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              {t("priceBadge")}
-            </div>
+            <CurrencySelector />
           </div>
 
           {/* Search + Grid (client component) */}
@@ -92,6 +92,6 @@ export default async function AllRatesPage({
           </p>
         </main>
       </div>
-    </>
+    </CurrencyProvider>
   );
 }

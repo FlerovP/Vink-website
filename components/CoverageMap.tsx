@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { useTranslations } from "next-intl";
 import type { CountryRate } from "@/lib/rates";
+import { useCurrency } from "@/components/CurrencyProvider";
 
 /* ─────────────────────────────────────────────────────────────────────────────
    Geo coordinates for ALL supported countries.
@@ -305,6 +306,7 @@ interface Props {
 export default function CoverageMap({ rates }: Props) {
   const prefersReduced = useReducedMotion();
   const t = useTranslations("coverage");
+  const { format } = useCurrency();
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
   const [hoveredCountry, setHoveredCountry] = useState<CountryWithGeo | null>(null);
@@ -524,7 +526,7 @@ export default function CoverageMap({ rates }: Props) {
                         {activeCarousel.country}
                       </span>
                       <span className="text-[9px] sm:text-[11px] font-bold text-cyan whitespace-nowrap bg-white/80 backdrop-blur-sm px-2 py-0.5 rounded-full shadow-sm">
-                        ${activeCarousel.pricePerGB.toFixed(2)}/GB
+                        {format(activeCarousel.pricePerGB)}/GB
                       </span>
                     </div>
                   </motion.div>
@@ -564,7 +566,7 @@ export default function CoverageMap({ rates }: Props) {
                         {hoveredCountry.country}
                       </span>
                       <span className="text-sm font-bold text-cyan whitespace-nowrap">
-                        ${hoveredCountry.pricePerGB.toFixed(2)}/GB
+                        {format(hoveredCountry.pricePerGB)}/GB
                       </span>
                     </div>
                   </motion.div>

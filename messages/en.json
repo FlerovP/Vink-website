@@ -170,6 +170,9 @@
     "support": "Support",
     "copyright": "© {year} VINK SIM. All rights reserved."
   },
+  "currency": {
+    "disclaimer": "Rates are approximate, based on the current exchange rate. The only official billing currency is USD."
+  },
   "cookies": {
     "message": "We use cookies and analytics to improve your experience.",
     "learnMore": "Learn more",
