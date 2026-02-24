@@ -17,6 +17,5 @@ export const siteConfig = {
     { href: "/terms" },
     { href: "/offer" },
     { href: "/refund" },
-    { href: "mailto:support@vinksim.com" },
   ],
 };

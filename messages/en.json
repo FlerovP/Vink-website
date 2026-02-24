@@ -164,6 +164,9 @@
     }
   },
   "footer": {
+    "tagline": "Mobile data in 180+ countries. One eSIM, no roaming fees.",
+    "legal": "Legal",
+    "contact": "Contact",
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "publicOffer": "Public Offer",
