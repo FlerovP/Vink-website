@@ -7,6 +7,7 @@ import "../globals.css";
 import { siteConfig } from "@/config/site";
 import SupportChat from "@/components/SupportChat";
 import LoadingSplash from "@/components/LoadingSplash";
+import CookieBanner from "@/components/CookieBanner";
 
 const inter = Inter({
   subsets: ["latin", "cyrillic"],
@@ -75,6 +76,7 @@ export default async function LocaleLayout({ children, params }: Props) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           {children}
           <SupportChat />
+          <CookieBanner />
         </NextIntlClientProvider>
       </body>
     </html>

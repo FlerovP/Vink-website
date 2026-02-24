@@ -170,6 +170,12 @@
     "support": "Поддержка",
     "copyright": "© {year} VINK SIM. Все права защищены."
   },
+  "cookies": {
+    "message": "Мы используем файлы cookie и аналитику для улучшения работы сайта.",
+    "learnMore": "Подробнее",
+    "accept": "Принять",
+    "decline": "Отклонить"
+  },
   "chat": {
     "title": "Поддержка VINK",
     "subtitle": "AI-ассистент",

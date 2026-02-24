@@ -170,6 +170,12 @@
     "support": "Support",
     "copyright": "© {year} VINK SIM. All rights reserved."
   },
+  "cookies": {
+    "message": "We use cookies and analytics to improve your experience.",
+    "learnMore": "Learn more",
+    "accept": "Accept",
+    "decline": "Decline"
+  },
   "chat": {
     "title": "VINK Support",
     "subtitle": "AI Assistant",
